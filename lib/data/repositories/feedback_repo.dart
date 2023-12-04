@@ -10,7 +10,7 @@ class FeedbackRepository {
       await _firestore.collection('Feedback').add(feedback.toJson());
     } catch (e) {
       if (kDebugMode) {
-        print('Error submitting aduan form: $e');
+        print('Error submitting feedback form: $e');
       }
     }
   }

@@ -1,3 +1,4 @@
+import 'package:csexplorer/presentation/screens/Forum/forum_main.dart';
 import 'package:csexplorer/presentation/screens/Home/home.dart';
 import 'package:csexplorer/presentation/screens/Feedback/feedback_form.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +63,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   final List<Widget> _tabPages = [
     const Center(child: Home()),
     const Center(child: FeedbackForm()),
-    const Center(child: FeedbackForm()),
+    const Center(child: ForumMain()),
     const Center(child: FeedbackForm()),
   ];
 
