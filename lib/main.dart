@@ -1,12 +1,17 @@
 import 'package:csexplorer/bottom_navbar.dart';
-import 'package:csexplorer/firebase_config.dart';
-import 'package:csexplorer/presentation/screens/Home/home.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseConfig.platformOptions);
+  try {
+    await Firebase.initializeApp();
+  } catch (e) {
+    if (kDebugMode) {
+      print('Error initializing Firebase: $e');
+    }
+  }
   runApp(const MyApp());
 }
 
