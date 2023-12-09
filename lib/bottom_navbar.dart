@@ -1,5 +1,9 @@
 import 'package:csexplorer/presentation/screens/Home/home.dart';
 import 'package:csexplorer/presentation/screens/Feedback/feedback_form.dart';
+<<<<<<< HEAD
+=======
+import 'package:csexplorer/presentation/screens/Profile/profile_screen.dart';
+>>>>>>> 0fb28d1 (Sign in and Sign up page)
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -63,7 +67,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
     const Center(child: Home()),
     const Center(child: FeedbackForm()),
     const Center(child: FeedbackForm()),
+<<<<<<< HEAD
     const Center(child: FeedbackForm()),
+=======
+    const Center(child: ProfilePage()),
+>>>>>>> 0fb28d1 (Sign in and Sign up page)
   ];
 
   void _popToInitialRoute(int index) {
