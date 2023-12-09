@@ -9,7 +9,7 @@ class FaqRepository {
     try {
       final querySnapshot = await _firestore.collection('faq').get();
       return querySnapshot.docs.map((doc) {
-        return Faq.fromJson(doc.data() as Map<String, dynamic>);
+        return Faq.fromSnapshot(doc);
       }).toList();
     } catch (e) {
       if (kDebugMode) {
@@ -19,15 +19,15 @@ class FaqRepository {
     }
   }
 
-  Future<bool> addFaq(Faq faq) async {
+  Future<String?> addFaq(Faq faq) async {
     try {
-      await _firestore.collection('faq').add(faq.toJson());
-      return true;
+      final docRef = await _firestore.collection('faq').add(faq.toJson());
+      return docRef.id;
     } catch (e) {
       if (kDebugMode) {
         print('Error adding FAQ: $e');
       }
-      return false;
+      return null;
     }
   }
 

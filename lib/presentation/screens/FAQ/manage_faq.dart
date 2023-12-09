@@ -30,7 +30,7 @@ class _ManageFAQState extends State<ManageFAQ> {
     });
   }
 
-  void _addFAQ(BuildContext context) async {
+  Future<void> _addFAQ(BuildContext context) async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -81,8 +81,9 @@ class _ManageFAQState extends State<ManageFAQ> {
         answer: answer,
       );
 
-      bool success = await _faqRepository.addFaq(newFAQ);
-      if (success) {
+      String? faqId = await _faqRepository.addFaq(newFAQ);
+
+      if (faqId != null) {
         _loadFaqs(); // Reload FAQs after adding
         questionController.clear();
         answerController.clear();
