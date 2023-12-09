@@ -61,6 +61,7 @@ class _ManageFAQState extends State<ManageFAQ> {
             ElevatedButton(
               onPressed: () async {
                 await _saveChanges();
+                // ignore: use_build_context_synchronously
                 Navigator.pop(context);
               },
               child: const Text('Add'),
@@ -88,7 +89,24 @@ class _ManageFAQState extends State<ManageFAQ> {
         questionController.clear();
         answerController.clear();
       } else {
-        print("fail");
+        // ignore: use_build_context_synchronously
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Error'),
+              content: const Text('Cannot Add the FAQ'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Dismiss the dialog
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
       }
     }
   }
@@ -129,6 +147,7 @@ class _ManageFAQState extends State<ManageFAQ> {
             ElevatedButton(
               onPressed: () async {
                 await _updateFAQ(index);
+                // ignore: use_build_context_synchronously
                 Navigator.pop(context);
               },
               child: const Text('Save Changes'),
@@ -155,17 +174,52 @@ class _ManageFAQState extends State<ManageFAQ> {
         editQuestionController.clear();
         editAnswerController.clear();
       } else {
-         print("fail");
+        // ignore: use_build_context_synchronously
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Error'),
+              content: const Text('Cannot Edit the FAQ'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Dismiss the dialog
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
       }
     }
   }
 
   void _deleteFAQ(int index) async {
+    BuildContext dialogContext = context;
     bool success = await _faqRepository.deleteFaq(faqList[index].id);
     if (success) {
       _loadFaqs(); // Reload FAQs after deleting
     } else {
-      print("fail");
+      // ignore: use_build_context_synchronously
+      showDialog(
+        context: dialogContext, // Use the stored context here
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: const Text('Cannot Delete the FAQ'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(dialogContext).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
