@@ -21,8 +21,8 @@ class CheckMbtiPage extends StatelessWidget {
   final Uri _url = Uri.parse('https://www.16personalities.com/free-personality-test');
 
 
-Future<void> _launchUrl(_url) async {
-  if (!await launchUrl(_url)) {
+Future<void> _launchUrl(url) async {
+  if (!await launchUrl(url)) {
     throw Exception('Could not launch $_url');
   }
 }
@@ -36,7 +36,7 @@ Future<void> _launchUrl(_url) async {
         title: const Text('Check MBTI'),
       ),
       body: Container(
-        color: Color.fromARGB(255, 195, 237, 238),
+        color: const Color.fromARGB(255, 195, 237, 238),
         child: Center(
           child: Container(
             width: MediaQuery.of(context).size.width * 0.8,
@@ -57,13 +57,13 @@ Future<void> _launchUrl(_url) async {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 const Text(
                   'The MBTI test can assist students in choosing a career by providing insights into their personality preferences, strengths, and potential areas of interest. By understanding their personality type, students can identify careers that align with their natural inclinations and strengths, making it easier to make informed career choices that are more likely to lead to satisfaction and success in the long term.',
                   style: TextStyle(fontSize: 16.0),
                   textAlign: TextAlign.justify,
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () {
                     _launchUrl(_url);
