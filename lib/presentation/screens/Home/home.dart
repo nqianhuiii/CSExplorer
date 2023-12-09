@@ -13,13 +13,10 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("CSExplorer"),
-<<<<<<< HEAD
-=======
         centerTitle: true,
       ),
       body: const Center(
         child: Text('This is the home page!'),
->>>>>>> 0fb28d1 (Sign in and Sign up page)
       ),
     );
   }

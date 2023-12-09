@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-import 'package:csexplorer/bottom_navbar.dart';
-import 'package:csexplorer/presentation/screens/Home/home.dart';
-import 'package:flutter/material.dart';
-
-void main() => runApp(const MyApp());
-=======
 //import 'package:csexplorer/bottom_navbar.dart';
 import 'package:csexplorer/presentation/screens/Authentication/login.dart';
 //import 'package:csexplorer/presentation/screens/Home/home.dart';
@@ -23,7 +16,6 @@ void main() async {
   }
   runApp(const MyApp());
 }
->>>>>>> 0fb28d1 (Sign in and Sign up page)
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -40,12 +32,8 @@ class MyApp extends StatelessWidget {
             color: Colors.black, fontWeight: FontWeight.normal, fontSize: 19),
         backgroundColor: Colors.white,
       )),
-<<<<<<< HEAD
-      home: const BottomNavBar(),
-=======
       home: const LoginPage(title: 'Sign in'),
       //home: const Home(),
->>>>>>> 0fb28d1 (Sign in and Sign up page)
     );
   }
 }
