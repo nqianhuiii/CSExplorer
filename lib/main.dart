@@ -1,8 +1,9 @@
-import 'package:csexplorer/bottom_navbar.dart';
-import 'package:csexplorer/presentation/screens/Home/home.dart';
 import 'package:flutter/material.dart';
+import 'addscholar.dart';
 
-void main() => runApp(const MyApp());
+void main() {
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -10,16 +11,50 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'IKON Chat',
-      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
       theme: ThemeData(
-          appBarTheme: const AppBarTheme(
-        iconTheme: IconThemeData(color: Colors.black),
-        titleTextStyle: TextStyle(
-            color: Colors.black, fontWeight: FontWeight.normal, fontSize: 19),
-        backgroundColor: Colors.white,
-      )),
-      home: const BottomNavBar(),
+        useMaterial3: true,
+      ),
+      home: const MyHomePage(title: 'Manage Scholarship Information'),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key, required this.title});
+
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(widget.title),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Text('No contents currently'),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddScholarPage()),
+          );
+        },
+        tooltip: 'Add Scholar',
+        child: Icon(Icons.add),
+      ),
     );
   }
 }
