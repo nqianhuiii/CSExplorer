@@ -88,7 +88,7 @@ class _ManageFAQState extends State<ManageFAQ> {
         questionController.clear();
         answerController.clear();
       } else {
-        // Handle failure
+        print("fail");
       }
     }
   }
@@ -155,7 +155,7 @@ class _ManageFAQState extends State<ManageFAQ> {
         editQuestionController.clear();
         editAnswerController.clear();
       } else {
-        // Handle failure
+         print("fail");
       }
     }
   }
@@ -165,7 +165,7 @@ class _ManageFAQState extends State<ManageFAQ> {
     if (success) {
       _loadFaqs(); // Reload FAQs after deleting
     } else {
-      // Handle failure
+      print("fail");
     }
   }
 
