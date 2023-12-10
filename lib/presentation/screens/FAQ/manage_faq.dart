@@ -139,6 +139,7 @@ class _ManageFAQState extends State<ManageFAQ> {
           ),
           actions: [
             ElevatedButton(
+              
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -230,7 +231,7 @@ class _ManageFAQState extends State<ManageFAQ> {
         appBar: AppBar(
           title: const Text('Manage FAQ List'),
         ),
-        backgroundColor: const Color(0xFFF8FBFF),
+        backgroundColor: Colors.grey[100],
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -278,12 +279,14 @@ class _ManageFAQState extends State<ManageFAQ> {
                         children: [
                           IconButton(
                             icon: const Icon(Icons.edit),
+                            color:Colors.indigo[700],
                             onPressed: () {
                               _editFAQ(context, index);
                             },
                           ),
                           IconButton(
                             icon: const Icon(Icons.delete),
+                            color:Colors.indigo[700],
                             onPressed: () {
                               _deleteFAQ(index);
                             },
@@ -307,8 +310,10 @@ class _ManageFAQState extends State<ManageFAQ> {
           onPressed: () {
             _addFAQ(context);
           },
-          child: const Icon(Icons.add),
-        ),
+           child: Icon(
+            Icons.add,
+            color: Colors.indigo[700], 
+          ),
       ),
     );
   }
