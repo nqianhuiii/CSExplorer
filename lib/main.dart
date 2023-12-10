@@ -15,15 +15,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'IKON Chat',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          appBarTheme: const AppBarTheme(
-        iconTheme: IconThemeData(color: Colors.black),
-        titleTextStyle: TextStyle(
-            color: Colors.black, fontWeight: FontWeight.normal, fontSize: 19),
-        backgroundColor: Colors.white,
-      )),
+      theme: ThemeData(scaffoldBackgroundColor: Colors.grey[100]),
       home: const BottomNavBar(),
     );
   }

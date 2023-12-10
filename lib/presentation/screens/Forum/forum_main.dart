@@ -1,4 +1,5 @@
 import 'package:csexplorer/presentation/screens/Forum/forum_question_form.dart';
+import 'package:csexplorer/presentation/screens/Forum/forum_topic.dart';
 import 'package:flutter/material.dart';
 
 class ForumMain extends StatefulWidget {
@@ -13,7 +14,7 @@ class _ForumMainState extends State<ForumMain> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Forum')),
-      body: Container(),
+      body: const ForumTopic(),
       floatingActionButton: Stack(
         children: [
           Positioned(
