@@ -32,7 +32,7 @@ class _HomeState extends State<Home> {
               ),
             ],
           ),
-          backgroundColor: Colors.blue,
+          backgroundColor: const Color.fromRGBO(66, 165, 245, 1),
           toolbarHeight: 130,
           shape: const ContinuousRectangleBorder(
               borderRadius: BorderRadius.vertical(bottom: Radius.circular(30))),
