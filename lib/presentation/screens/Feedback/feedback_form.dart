@@ -1,3 +1,5 @@
+import 'package:csexplorer/data/model/feedback.dart';
+import 'package:csexplorer/data/repositories/feedback_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -10,12 +12,10 @@ class FeedbackForm extends StatefulWidget {
 
 class _FeedbackFormState extends State<FeedbackForm> {
   double satisfaction = 0;
-  double objective = 0;
+  double understanding = 0;
   double recommendability = 0;
   final _suggestionController = TextEditingController();
-
-  // initialize the status of the button
-  bool feedbackSubmitted = false;
+  final FeedbackRepository _feedbackRepository = FeedbackRepository();
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +92,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
                 color: Colors.amber,
               ),
               onRatingUpdate: (rating) {
-                objective = rating;
+                understanding = rating;
               },
             ),
             const SizedBox(height: 20),
@@ -141,9 +141,15 @@ class _FeedbackFormState extends State<FeedbackForm> {
                 width: 250,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Navigator.of(context).pop(feedbackSubmitted); // pass the boolean value back
-                    Navigator.of(context).pop();
+                  onPressed: () async {
+                    UserFeedback feedback = UserFeedback(
+                      satisfaction,
+                      understanding,
+                      recommendability,
+                      _suggestionController.text,
+                    );
+
+                    await _feedbackRepository.addFeedback(feedback);
                   },
                   style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
