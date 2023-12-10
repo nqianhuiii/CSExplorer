@@ -1,7 +1,6 @@
 import 'package:csexplorer/presentation/screens/FAQ/manage_faq.dart';
 import 'package:csexplorer/presentation/screens/Forum/forum_main.dart';
 import 'package:csexplorer/presentation/screens/Home/home.dart';
-import 'package:csexplorer/presentation/screens/Feedback/feedback_form.dart';
 import 'package:csexplorer/presentation/screens/Profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
