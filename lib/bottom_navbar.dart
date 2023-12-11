@@ -27,7 +27,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
         items: _tabItems,
-        activeColor: Colors.blue[400],
+        activeColor: Colors.indigo[700],
         currentIndex: _currentTabBar,
         onTap: (int index) {
           if (_currentTabBar == index) {

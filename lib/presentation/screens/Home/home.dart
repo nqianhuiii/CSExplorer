@@ -1,3 +1,5 @@
+import "package:csexplorer/customWidget/CustomHomeContainer.dart";
+import "package:csexplorer/presentation/screens/Universities/university_main.dart";
 import "package:flutter/material.dart";
 
 class Home extends StatefulWidget {
@@ -32,7 +34,7 @@ class _HomeState extends State<Home> {
               ),
             ],
           ),
-          backgroundColor: const Color.fromRGBO(66, 165, 245, 1),
+          backgroundColor: Colors.indigo[700],
           toolbarHeight: 130,
           shape: const ContinuousRectangleBorder(
               borderRadius: BorderRadius.vertical(bottom: Radius.circular(30))),
@@ -48,77 +50,27 @@ class _HomeState extends State<Home> {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               const SizedBox(height: 20),
-              Container(
-                width: 360,
-                height: 120,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              CustomHomeContainer(
+                title: "Tertiary Institution",
+                description:
+                    "View list of public and private universities, colleges, and vocational schools that provide computer science",
+                onTapCallback: (context) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const UniversityMain()));
+                },
               ),
               const SizedBox(height: 15),
-              Container(
-                width: 360,
-                height: 120,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              const CustomHomeContainer(
+                  title: "Computer Science Courses",
+                  description:
+                      "View list of public and private universities, colleges, and vocational schools that provide computer science"),
               const SizedBox(height: 15),
-              Container(
-                width: 360,
-                height: 120,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              const CustomHomeContainer(
+                  title: "Scholarships",
+                  description:
+                      "View list of public and private universities, colleges, and vocational schools that provide computer science"),
             ],
           ),
         ));
