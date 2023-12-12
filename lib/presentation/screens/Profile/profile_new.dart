@@ -10,8 +10,7 @@ class ProfileCreatePage extends StatefulWidget {
 
 class ProfileCreatePageState extends State<ProfileCreatePage> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController firstNameController = TextEditingController();
-  TextEditingController lastNameController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -49,26 +48,12 @@ class ProfileCreatePageState extends State<ProfileCreatePage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 16),
               child: TextFormField(
-                controller: firstNameController,
+                controller: nameController,
                 decoration: const InputDecoration(
-                    border: OutlineInputBorder(), labelText: "First Name"),
+                    border: OutlineInputBorder(), labelText: "My Name"),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your first name';
-                  }
-                  return null; //if input
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 16),
-              child: TextFormField(
-                controller: lastNameController,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(), labelText: "Last Name"),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your last name';
+                    return 'Please enter your name';
                   }
                   return null; //if input
                 },

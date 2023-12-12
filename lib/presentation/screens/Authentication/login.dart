@@ -3,6 +3,9 @@
 import 'package:csexplorer/bottom_navbar.dart';
 import 'package:csexplorer/presentation/screens/Authentication/forgot_password.dart';
 import 'package:csexplorer/presentation/screens/Authentication/signup.dart';
+import 'package:csexplorer/service/Validator.dart';
+import 'package:csexplorer/service/authService.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -15,32 +18,40 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final AuthService _authService = AuthService();
+  late User user;
+
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  final _emailRegex = RegExp(
-    r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$',
-  );
+
+  Future<User?> _handleLogin() async {
+    String email = emailController.text;
+    String password = passwordController.text;
+
+    return await _authService.logIn(email, password);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        //automaticallyImplyLeading: false,
         title: const Text("CSExplorer"),
         centerTitle: true,
         toolbarHeight: 65,
-        shape: const RoundedRectangleBorder(
+        /* shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             bottomRight: Radius.circular(25),
             bottomLeft: Radius.circular(25),
           ),
-        ),
-        elevation: 1,
+        ), */
+        elevation: 3,
         titleTextStyle: const TextStyle(
-            color: Color.fromRGBO(255, 255, 255, 0.9),
+            color: Color.fromRGBO(245, 245, 245, 1),
             fontWeight: FontWeight.bold,
             fontSize: 30),
-        backgroundColor: const Color.fromRGBO(66, 165, 245, 1),
+        backgroundColor: Colors.indigo[700],
       ),
       body: Form(
         key: _formKey,
@@ -56,34 +67,20 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
               child: TextFormField(
                 controller: emailController,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(), labelText: "Email"),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  } else if (!_emailRegex.hasMatch(value)) {
-                    return 'Please enter a valid email';
-                  }
-                  return null; //if input
-                },
+                decoration: const InputDecoration(labelText: "Email"),
+                validator: (value) => Validator.validateEmail(value!),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
               child: TextFormField(
                 controller: passwordController,
                 obscureText: true,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(), labelText: "Password"),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
-                  }
-                  return null; //if input
-                },
+                decoration: const InputDecoration(labelText: "Password"),
+                validator: (value) => Validator.validatePassword(value!),
               ),
             ),
             TextButton(
@@ -97,36 +94,51 @@ class _LoginPageState extends State<LoginPage> {
               },
               child: const Text(
                 'Forgot Password?',
+                style: TextStyle(
+                  color: Color.fromRGBO(48, 63, 159, 1),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
               child: Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const BottomNavBar(),
-                        ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Please fill input')));
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    textStyle: const TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.9),
-                      fontWeight: FontWeight.bold,
+                child: SizedBox(
+                  height: 50,
+                  width: 250,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        String email = emailController.text;
+                        String password = passwordController.text;
+                        User? user = await _authService.logIn(email, password);
+
+                        if (user != null) {
+                          // ignore: use_build_context_synchronously
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const BottomNavBar(),
+                            ),
+                          );
+                        }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('No User Found')));
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      textStyle: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      foregroundColor: Colors.grey[100],
+                      backgroundColor: Colors.indigo[700],
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
                     ),
-                    backgroundColor: const Color.fromRGBO(66, 165, 245, 1),
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(25)),
-                    ),
+                    child: const Text('Sign in'),
                   ),
-                  child: const Text('Sign in'),
                 ),
               ),
             ),
@@ -154,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: const Text(
                         "Sign up",
                         style: TextStyle(
-                          color: Color.fromRGBO(66, 165, 245, 1),
+                          color: Color.fromRGBO(48, 63, 159, 1),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -164,6 +176,7 @@ class _LoginPageState extends State<LoginPage> {
           ],
         ),
       ),
+      bottomNavigationBar: null,
     );
   }
 }
