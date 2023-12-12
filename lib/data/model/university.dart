@@ -1,19 +1,18 @@
 class University {
-  late String description, location;
+  late String name, description;
+  late int imageIndex;
 
-  University(this.description, this.location);
+  University(this.name, this.description);
 
-  University.copy(University item) : this(item.description, item.location);
+  University.copy(University item) : this(item.name, item.description);
 
   Map<String, dynamic> toJson() {
-    return {
-      'description': description,
-      'location': location,
-    };
+    return {'name': name, 'description': description};
   }
 
   University.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
     description = json['description'];
-    location = json['location'];
+    imageIndex = json['imageIndex'];
   }
 }

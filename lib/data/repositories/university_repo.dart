@@ -14,4 +14,20 @@ class UniversityRepo {
       }
     }
   }
+
+  Future<List<University>> fetchUniList() async {
+    try {
+      QuerySnapshot querySnapshot =
+          await _firestore.collection('University').get();
+      List<University> uniList = querySnapshot.docs.map((doc) {
+        return University.fromJson(doc.data() as Map<String, dynamic>);
+      }).toList();
+      return uniList;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error fetching university list: $e');
+      }
+      rethrow;
+    }
+  }
 }

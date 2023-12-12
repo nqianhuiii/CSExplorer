@@ -20,6 +20,7 @@ class _UniversityFormState extends State<UniversityForm> {
       appBar: AppBar(
         title: const Text("Add a university"),
       ),
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
         child: Padding(
@@ -27,14 +28,39 @@ class _UniversityFormState extends State<UniversityForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("Name"),
+              Text(
+                "Name",
+                style: TextStyle(color: Colors.grey[600]),
+              ),
               TextField(
                 controller: _universityController,
                 decoration:
                     const InputDecoration(border: UnderlineInputBorder()),
               ),
-              const SizedBox(height: 15),
-              const Text("Description"),
+              const SizedBox(height: 20),
+              Text(
+                "Location",
+                style: TextStyle(color: Colors.grey[600]),
+              ),
+              TextField(
+                controller: _universityController,
+                decoration:
+                    const InputDecoration(border: UnderlineInputBorder()),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                "Description",
+                style: TextStyle(color: Colors.grey[600]),
+              ),
+              TextField(
+                controller: _universityController,
+                decoration: const InputDecoration(
+                    border: UnderlineInputBorder(),
+                    hintText: 'Short description about the university'),
+              ),
+              const SizedBox(height: 20),
+              Text("Introduce the university",
+                  style: TextStyle(color: Colors.grey[600])),
               const SizedBox(
                 height: 5,
               ),
@@ -43,7 +69,8 @@ class _UniversityFormState extends State<UniversityForm> {
                   maxLines: 5,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)))),
+                          borderRadius: BorderRadius.circular(10)),
+                      hintText: 'Background of the university')),
               const SizedBox(height: 271),
               Center(
                 child: SizedBox(
