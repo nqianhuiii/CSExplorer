@@ -1,8 +1,8 @@
-//forgot password
-//authentication by google whatsoever
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csexplorer/bottom_navbar.dart';
 import 'package:csexplorer/presentation/screens/Authentication/forgot_password.dart';
 import 'package:csexplorer/presentation/screens/Authentication/signup.dart';
+import 'package:csexplorer/presentation/screens/Home/adminHome.dart';
 import 'package:csexplorer/service/Validator.dart';
 import 'package:csexplorer/service/authService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,16 +21,9 @@ class _LoginPageState extends State<LoginPage> {
   final AuthService _authService = AuthService();
   late User user;
 
-  final _formKey = GlobalKey<FormState>();
+  final _formkey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-
-  Future<User?> _handleLogin() async {
-    String email = emailController.text;
-    String password = passwordController.text;
-
-    return await _authService.logIn(email, password);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
         backgroundColor: Colors.indigo[700],
       ),
       body: Form(
-        key: _formKey,
+        key: _formkey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -108,7 +101,10 @@ class _LoginPageState extends State<LoginPage> {
                   width: 250,
                   child: ElevatedButton(
                     onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
+                      String email = emailController.text;
+                      String password = passwordController.text;
+                      signIn(email, password);
+                      /* if (_formkey.currentState!.validate()) {
                         String email = emailController.text;
                         String password = passwordController.text;
                         User? user = await _authService.logIn(email, password);
@@ -124,8 +120,10 @@ class _LoginPageState extends State<LoginPage> {
                         }
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('No User Found')));
-                      }
+                            const SnackBar(
+                                content:
+                                    Text('Invalid sign in, please try again')));
+                      } */
                     },
                     style: ElevatedButton.styleFrom(
                       textStyle: const TextStyle(
@@ -176,7 +174,42 @@ class _LoginPageState extends State<LoginPage> {
           ],
         ),
       ),
-      bottomNavigationBar: null,
     );
+  }
+
+  void routeLogin() {
+    User? user = FirebaseAuth.instance.currentUser;
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        if (documentSnapshot.get('role') == "admin") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const adminHome(),
+            ),
+          );
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const BottomNavBar(),
+            ),
+          );
+        }
+      } else {
+        print('Does not exist on the database');
+      }
+    });
+  }
+
+  void signIn(String email, String password) async {
+    if (_formkey.currentState!.validate()) {
+      await _authService.logIn(email, password);
+      routeLogin();
+    }
   }
 }

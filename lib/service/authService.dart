@@ -1,12 +1,18 @@
+// ignore_for_file: unused_local_variable
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<User?> signUp(String name, String email, String password) async {
+  Future<User?> signUp(
+      String name, String email, String password, String role) async {
     try {
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
+
+      postDetailsToFirestore(name, email, role);
 
       User? user = userCredential.user;
       return user;
@@ -14,6 +20,15 @@ class AuthService {
       print(e);
       return null;
     }
+  }
+
+  postDetailsToFirestore(String username, String email, String role) async {
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    var user = _auth.currentUser;
+    CollectionReference ref = FirebaseFirestore.instance.collection('users');
+    ref
+        .doc(user!.uid)
+        .set({'username': username, 'email': email, 'role': role});
   }
 
   Future<User?> logIn(String email, String password) async {
@@ -35,9 +50,5 @@ class AuthService {
 
   Future<void> logOut() async {
     await _auth.signOut();
-  }
-
-  Future<User?> getCurrentUser() async {
-    return _auth.currentUser;
   }
 }
