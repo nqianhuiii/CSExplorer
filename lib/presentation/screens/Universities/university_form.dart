@@ -12,6 +12,9 @@ class UniversityForm extends StatefulWidget {
 class _UniversityFormState extends State<UniversityForm> {
   final _universityController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _locationController = TextEditingController();
+  final _backgroundController = TextEditingController();
+
   final UniversityRepo _uniRepository = UniversityRepo();
 
   @override
@@ -43,7 +46,7 @@ class _UniversityFormState extends State<UniversityForm> {
                 style: TextStyle(color: Colors.grey[600]),
               ),
               TextField(
-                controller: _universityController,
+                controller: _locationController,
                 decoration:
                     const InputDecoration(border: UnderlineInputBorder()),
               ),
@@ -53,7 +56,7 @@ class _UniversityFormState extends State<UniversityForm> {
                 style: TextStyle(color: Colors.grey[600]),
               ),
               TextField(
-                controller: _universityController,
+                controller: _descriptionController,
                 decoration: const InputDecoration(
                     border: UnderlineInputBorder(),
                     hintText: 'Short description about the university'),
@@ -65,13 +68,13 @@ class _UniversityFormState extends State<UniversityForm> {
                 height: 5,
               ),
               TextFormField(
-                  controller: _descriptionController,
+                  controller: _backgroundController,
                   maxLines: 5,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10)),
                       hintText: 'Background of the university')),
-              const SizedBox(height: 271),
+              const SizedBox(height: 80),
               Center(
                 child: SizedBox(
                   width: 250,
@@ -80,7 +83,9 @@ class _UniversityFormState extends State<UniversityForm> {
                     onPressed: () async {
                       University university = University(
                           _universityController.text,
-                          _descriptionController.text);
+                          _locationController.text,
+                          _descriptionController.text,
+                          _backgroundController.text);
 
                       _uniRepository.addUniversity(university);
                     },

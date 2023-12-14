@@ -1,6 +1,7 @@
 import "package:csexplorer/customWidget/CustomAppBar.dart";
 import "package:csexplorer/data/model/university.dart";
 import "package:csexplorer/data/repositories/university_repo.dart";
+import "package:csexplorer/presentation/screens/Universities/university_details.dart";
 import "package:csexplorer/presentation/screens/Universities/university_form.dart";
 import "package:flutter/material.dart";
 
@@ -61,48 +62,57 @@ class _UniversityMainState extends State<UniversityMain> {
                       const SizedBox(
                         height: 10,
                       ),
-                      Container(
-                        width: 370,
-                        height: 80,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 15),
-                              child: Container(
-                                width: 70,
-                                height: 70,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.asset(
-                                    'assets/images/university/${uniImage[university.imageIndex]}',
-                                    fit: BoxFit.cover,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => UniversityDetails(
+                                      universityArguments: university)));
+                        },
+                        child: Container(
+                          width: 370,
+                          height: 80,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 15),
+                                child: Container(
+                                  width: 70,
+                                  height: 70,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.asset(
+                                      'assets/images/university/${uniImage[university.imageIndex]}',
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(
-                              width: 15,
-                            ),
-                            SizedBox(
-                              width: 260,
-                              height: 100,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    university.name,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    university.description,
-                                    style: TextStyle(color: Colors.grey[600]),
-                                  ),
-                                ],
+                              const SizedBox(
+                                width: 15,
                               ),
-                            ),
-                          ],
+                              SizedBox(
+                                width: 260,
+                                height: 100,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      university.name,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      university.description,
+                                      style: TextStyle(color: Colors.grey[600]),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],

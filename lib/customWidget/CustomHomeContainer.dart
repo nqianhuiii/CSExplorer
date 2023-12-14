@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 class CustomHomeContainer extends StatelessWidget {
+  final String link;
   final String title;
   final String description;
   final void Function(BuildContext)? onTapCallback;
 
   const CustomHomeContainer({
     Key? key,
+    required this.link,
     required this.title,
     required this.description,
     this.onTapCallback,
@@ -30,13 +32,12 @@ class CustomHomeContainer extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 15),
               child: Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
+                  width: 100,
+                  height: 100,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(link, fit: BoxFit.cover),
+                  )),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),

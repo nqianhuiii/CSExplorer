@@ -51,6 +51,7 @@ class _HomeState extends State<Home> {
               ),
               const SizedBox(height: 20),
               CustomHomeContainer(
+                link: 'assets/images/main/tertiaryEducation.jpg',
                 title: "Tertiary Institution",
                 description:
                     "View list of public and private universities, colleges, and vocational schools that provide computer science",
@@ -63,11 +64,13 @@ class _HomeState extends State<Home> {
               ),
               const SizedBox(height: 15),
               const CustomHomeContainer(
+                  link: 'assets/images/main/computerScience.jpg',
                   title: "Computer Science Courses",
                   description:
                       "View list of public and private universities, colleges, and vocational schools that provide computer science"),
               const SizedBox(height: 15),
               const CustomHomeContainer(
+                  link: 'assets/images/main/scholarship.jpg',
                   title: "Scholarships",
                   description:
                       "View list of public and private universities, colleges, and vocational schools that provide computer science"),
