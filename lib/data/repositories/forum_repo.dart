@@ -16,11 +16,9 @@ class ForumRepository {
   }
 
   Future<List<Forum>> fetchForumList() async {
-    try {
-      // fetch data from firestore
+    try
+    {
       QuerySnapshot querySnapshot = await _firestore.collection('Forum').get();
-      
-      // retrieve list of cdoc, transform each doc in list, convert raw data to Forum object
       List<Forum> forumList = querySnapshot.docs.map((doc) {
         return Forum.fromJson(doc.data() as Map<String, dynamic>);
       }).toList();
