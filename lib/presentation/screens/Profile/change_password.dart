@@ -3,14 +3,14 @@ import 'package:csexplorer/service/authService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class ForgotPassword extends StatefulWidget {
-  const ForgotPassword({super.key});
+class ChangePassword extends StatefulWidget {
+  const ChangePassword({super.key});
 
   @override
-  State<ForgotPassword> createState() => _ForgotPasswordState();
+  State<ChangePassword> createState() => _ForgotPasswordState();
 }
 
-class _ForgotPasswordState extends State<ForgotPassword> {
+class _ForgotPasswordState extends State<ChangePassword> {
   final AuthService _authService = AuthService();
 
   final _formkey = GlobalKey<FormState>();
@@ -29,7 +29,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 color: Color.fromRGBO(245, 245, 245, 1),
               ),
               onPressed: () {
-                Scaffold.of(context).openDrawer();
+                Navigator.pop(context);
               },
             );
           },

@@ -1,5 +1,7 @@
+import 'package:csexplorer/bottom_navbar.dart';
 import 'package:csexplorer/firebase_config.dart';
 import 'package:csexplorer/presentation/screens/Authentication/login.dart';
+import 'package:csexplorer/presentation/screens/Profile/profile_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -20,6 +22,7 @@ class MyApp extends StatelessWidget {
           primaryColor: Colors.indigo[700],
           scaffoldBackgroundColor: Colors.grey[100]),
       home: const LoginPage(title: 'Sign in'),
+      //home: const BottomNavBar(),
     );
   }
 }

@@ -12,7 +12,7 @@ class AuthService {
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
 
-      postDetailsToFirestore(name, email, role);
+      setUserData(name, email, role);
 
       User? user = userCredential.user;
       return user;
@@ -20,15 +20,6 @@ class AuthService {
       print(e);
       return null;
     }
-  }
-
-  postDetailsToFirestore(String username, String email, String role) async {
-    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    var user = _auth.currentUser;
-    CollectionReference ref = FirebaseFirestore.instance.collection('users');
-    ref
-        .doc(user!.uid)
-        .set({'username': username, 'email': email, 'role': role});
   }
 
   Future<User?> logIn(String email, String password) async {
@@ -50,6 +41,25 @@ class AuthService {
 
   Future<void> logOut() async {
     await _auth.signOut();
+  }
+
+  Future<User?> getCurrentUser() async {
+    return FirebaseAuth.instance.currentUser;
+  }
+
+  setUserData(String username, String email, String role) async {
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    var user = _auth.currentUser;
+    CollectionReference ref = FirebaseFirestore.instance.collection('users');
+    ref
+        .doc(user!.uid)
+        .set({'username': username, 'email': email, 'role': role});
+  }
+
+  Future<Map<String, dynamic>?> getUserData(String uid) async {
+    var userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    return userDoc.data() as Map<String, dynamic>?;
   }
 
   Future<void> resetPassword(String email) async {

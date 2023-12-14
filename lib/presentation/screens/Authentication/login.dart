@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csexplorer/bottom_navbar.dart';
-import 'package:csexplorer/presentation/screens/Authentication/forgot_password.dart';
+import 'package:csexplorer/presentation/screens/Profile/change_password.dart';
 import 'package:csexplorer/presentation/screens/Authentication/signup.dart';
 import 'package:csexplorer/presentation/screens/Home/adminHome.dart';
 import 'package:csexplorer/service/Validator.dart';
@@ -81,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const ForgotPassword(),
+                    builder: (context) => const ChangePassword(),
                   ),
                 );
               },
