@@ -13,6 +13,7 @@ class _ForumTopicFormState extends State<ForumTopicForm> {
   final _subjectController = TextEditingController();
   final _messageController = TextEditingController();
   final ForumRepository _forumRepository = ForumRepository();
+  int likes = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +55,10 @@ class _ForumTopicFormState extends State<ForumTopicForm> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () async {
-                      Forum forum = Forum(
-                          _subjectController.text, _messageController.text);
-
+                      Forum forum = Forum(_subjectController.text,
+                          _messageController.text, likes);
                       _forumRepository.addForumTopic(forum);
+                      Navigator.pop(context);
                     },
                     style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
@@ -75,3 +76,4 @@ class _ForumTopicFormState extends State<ForumTopicForm> {
     );
   }
 }
+
