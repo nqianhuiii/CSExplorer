@@ -1,4 +1,5 @@
 import 'package:csexplorer/presentation/screens/FAQ/manage_faq.dart';
+import 'package:csexplorer/presentation/screens/FAQ/view_faq.dart';
 import 'package:csexplorer/presentation/screens/Forum/forum_main.dart';
 import 'package:csexplorer/presentation/screens/Home/home.dart';
 import 'package:csexplorer/presentation/screens/Profile/profile_screen.dart';
