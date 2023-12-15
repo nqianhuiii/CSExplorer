@@ -27,7 +27,7 @@ class _UniversityMainState extends State<UniversityMain> {
       appBar: const CustomAppBar(
           title: "Tertiary Institution",
           description: "Public and Private University/College/Vocational"),
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[100],
       body: FutureBuilder<List<University>>(
           future: _universityRepo.fetchUniList(),
           builder: (context, snapshot) {
@@ -46,76 +46,66 @@ class _UniversityMainState extends State<UniversityMain> {
             } else {
               return ListView.separated(
                 itemCount: snapshot.data!.length,
-                separatorBuilder: (context, index) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Divider(
-                    color: Colors.grey[300],
-                    height: 1,
-                  ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                separatorBuilder: (context, index) => const SizedBox(
+                  height: 10,
                 ),
                 itemBuilder: (context, index) {
                   University university = snapshot.data![index];
 
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => UniversityDetails(
-                                      universityArguments: university)));
-                        },
-                        child: Container(
-                          width: 370,
-                          height: 80,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 15),
-                                child: Container(
-                                  width: 70,
-                                  height: 70,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Image.asset(
-                                      'assets/images/university/${uniImage[university.imageIndex]}',
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => UniversityDetails(
+                                  universityArguments: university)));
+                    },
+                    child: Container(
+                      width: 240,
+                      height: 120,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15)),
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20),
+                            child: Container(
+                              width: 80,
+                              height: 80,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.asset(
+                                  'assets/images/university/${uniImage[university.imageIndex]}',
+                                  fit: BoxFit.cover,
                                 ),
                               ),
-                              const SizedBox(
-                                width: 15,
-                              ),
-                              SizedBox(
-                                width: 260,
-                                height: 100,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      university.name,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      university.description,
-                                      style: TextStyle(color: Colors.grey[600]),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 10),
+                            child: SizedBox(
+                              height: 100,
+                              width: 230,
+                              child: Column(children: [
+                                Text(
+                                  university.name,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Text(university.description)
+                              ]),
+                            ),
+                          )
+                        ],
                       ),
-                    ],
+                    ),
                   );
                 },
               );

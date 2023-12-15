@@ -1,5 +1,10 @@
+// ignore_for_file: unused_import
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csexplorer/presentation/screens/Authentication/login.dart';
-import 'package:csexplorer/presentation/screens/Profile/profile_new.dart';
+import 'package:csexplorer/presentation/screens/Profile/profile_screen.dart';
+import 'package:csexplorer/service/Validator.dart';
+import 'package:csexplorer/service/authService.dart';
 import 'package:flutter/material.dart';
 
 class SignupPage extends StatefulWidget {
@@ -12,38 +17,38 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  final _formKey = GlobalKey<FormState>();
+  final AuthService _authService = AuthService();
+  final _formkey = GlobalKey<FormState>();
 
+  TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  TextEditingController comfirmEmailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController comfirmPasswordController = TextEditingController();
-  final _emailRegex = RegExp(
-    r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$',
-  );
+  var role = "user";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        //automaticallyImplyLeading: false,
         title: const Text("CSExplorer"),
         centerTitle: true,
         toolbarHeight: 65,
-        shape: const RoundedRectangleBorder(
+        /* shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             bottomRight: Radius.circular(25),
             bottomLeft: Radius.circular(25),
           ),
-        ),
+        ), */
         elevation: 1,
         titleTextStyle: const TextStyle(
             color: Color.fromRGBO(255, 255, 255, 0.9),
             fontWeight: FontWeight.bold,
             fontSize: 30),
-        backgroundColor: const Color.fromRGBO(66, 165, 245, 1),
+        backgroundColor: Colors.indigo[700],
       ),
       body: Form(
-        key: _formKey,
+        key: _formkey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -56,102 +61,72 @@ class _SignupPageState extends State<SignupPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+              child: TextFormField(
+                controller: nameController,
+                decoration: const InputDecoration(labelText: "Your Name"),
+                validator: (value) => Validator.validateName(value!),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
               child: TextFormField(
                 controller: emailController,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(), labelText: "Email"),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  } else if (!_emailRegex.hasMatch(value)) {
-                    return 'Please enter a valid email';
-                  }
-                  return null; //if input
-                },
+                decoration: const InputDecoration(labelText: "Email"),
+                validator: (value) => Validator.validateEmail(value!),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 16),
-              child: TextFormField(
-                controller: comfirmEmailController,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(), labelText: "Comfirm Email"),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please comfirm your email';
-                  } else if (!_emailRegex.hasMatch(value)) {
-                    return 'Please enter a valid email';
-                  } else if (value != emailController.text) {
-                    return 'Email did not match';
-                  }
-                  return null; //if input
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
               child: TextFormField(
                 controller: passwordController,
                 obscureText: true,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(), labelText: "Password"),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
-                  }
-                  return null; //if input
-                },
+                decoration: const InputDecoration(labelText: "Password"),
+                validator: (value) => Validator.validatePassword(value!),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
               child: TextFormField(
                 controller: comfirmPasswordController,
                 obscureText: true,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Comfirm Password"),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please comfirm your password';
-                  } else if (value != passwordController.text) {
-                    return 'Password did not match';
-                  }
-                  return null; //if input
-                },
+                decoration:
+                    const InputDecoration(labelText: "Comfirm Password"),
+                validator: (value) => Validator.validateComfirmPassword(
+                    value!, passwordController.text),
               ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
               child: Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ProfileCreatePage(
-                            title: 'Create Profile',
-                          ),
-                        ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Please fill input')));
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    textStyle: const TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.9),
-                      fontWeight: FontWeight.bold,
+                child: SizedBox(
+                  height: 50,
+                  width: 250,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formkey.currentState!.validate()) {
+                        String username = nameController.text;
+                        String email = emailController.text;
+                        String password = passwordController.text;
+
+                        signUp(username, email, password, role);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Please fill input')));
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      textStyle: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      foregroundColor: Colors.grey[100],
+                      backgroundColor: Colors.indigo[700],
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
                     ),
-                    backgroundColor: const Color.fromRGBO(66, 165, 245, 1),
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(25)),
-                    ),
+                    child: const Text('Sign up'),
                   ),
-                  child: const Text('Sign up'),
                 ),
               ),
             ),
@@ -179,7 +154,7 @@ class _SignupPageState extends State<SignupPage> {
                       child: const Text(
                         "Sign in",
                         style: TextStyle(
-                          color: Color.fromRGBO(66, 165, 245, 1),
+                          color: Color.fromRGBO(48, 63, 159, 1),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -188,6 +163,24 @@ class _SignupPageState extends State<SignupPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void signUp(
+      String username, String email, String password, String role) async {
+    const CircularProgressIndicator();
+    if (_formkey.currentState!.validate()) {
+      await _authService.signUp(username, email, password, role);
+      routeSignup();
+    }
+  }
+
+  void routeSignup() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const ProfilePage(),
       ),
     );
   }

@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  uuid: ^3.0.4
 
   # rating bar
   flutter_rating_bar: ^4.0.1
