@@ -19,6 +19,7 @@ class _UniversityMainState extends State<UniversityMain> {
     'UTM.jpg',
     'UM.jpg',
     'USM.jpg',
+    'UM.jpg',
   ];
 
   @override
@@ -86,21 +87,23 @@ class _UniversityMainState extends State<UniversityMain> {
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 10),
+                                horizontal: 15, vertical: 15),
                             child: SizedBox(
                               height: 100,
                               width: 230,
-                              child: Column(children: [
-                                Text(
-                                  university.name,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                Text(university.description)
-                              ]),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      university.name,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(university.description)
+                                  ]),
                             ),
                           )
                         ],

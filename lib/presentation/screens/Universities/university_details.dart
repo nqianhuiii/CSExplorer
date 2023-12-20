@@ -15,6 +15,7 @@ class _UniversityDetailsState extends State<UniversityDetails> {
     'UTM.jpg',
     'UM.jpg',
     'USM.jpg',
+    'UM.jpg',
   ];
 
   @override
@@ -38,28 +39,50 @@ class _UniversityDetailsState extends State<UniversityDetails> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          widget.universityArguments.name,
-                          style: const TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          widget.universityArguments.location,
-                          style: TextStyle(color: Colors.grey[600]),
-                        ),
-                        const SizedBox(height: 30),
-                        const Text(
-                          'Background',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(widget.universityArguments.background),
-                      ],
-                    ),
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            widget.universityArguments.name,
+                            style: const TextStyle(
+                                fontSize: 17, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            widget.universityArguments.location,
+                            style: TextStyle(color: Colors.grey[600]),
+                          ),
+                          const SizedBox(height: 30),
+                          const Text(
+                            'Background',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text(widget.universityArguments.background),
+                          const SizedBox(height: 30),
+                          const Text(
+                            'Computer Science Course Offered',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: widget.universityArguments.courseNames
+                                  .map((courseName) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.indigo.shade700),
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(8))),
+                                    padding: const EdgeInsets.all(10),
+                                    child: Text(courseName),
+                                  ),
+                                );
+                              }).toList()),
+                          const SizedBox(height: 70),
+                        ]),
                   ),
                 ],
               ),
