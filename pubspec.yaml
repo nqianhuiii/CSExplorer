@@ -75,6 +75,7 @@ flutter:
     - assets/images/
     - assets/images/university/
     - assets/images/main/
+    - assets/images/mbti/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

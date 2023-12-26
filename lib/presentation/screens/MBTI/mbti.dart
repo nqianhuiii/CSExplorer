@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 void main() {
   runApp(const MyApp());
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -18,66 +19,113 @@ class MyApp extends StatelessWidget {
 class CheckMbtiPage extends StatelessWidget {
   CheckMbtiPage({Key? key}) : super(key: key);
 
-  final Uri _url = Uri.parse('https://www.16personalities.com/free-personality-test');
+  final Uri _url =
+      Uri.parse('https://www.16personalities.com/free-personality-test');
 
-
-Future<void> _launchUrl(url) async {
-  if (!await launchUrl(url)) {
-    throw Exception('Could not launch $_url');
+  Future<void> _launchUrl(url) async {
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $_url');
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(21, 179, 182, 1),
-        title: const Text('Check MBTI'),
+        title: const Expanded(
+          
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "MBTI test",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                   fontSize: 25,
+                ),
+              ),
+              SizedBox(height: 7),
+              Text(
+                "Get to know your personality with the MBTI test",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 17,
+                ),
+              ),
+            ],
+          ),
+        ),
+        backgroundColor: Colors.indigo[700],
+        toolbarHeight: 160,
+        shape: const ContinuousRectangleBorder(
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(30))),
       ),
       body: Container(
-        color: const Color.fromARGB(255, 195, 237, 238),
-        child: Center(
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.8,
-            height: MediaQuery.of(context).size.height * 0.8,
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text(
-                  'MBTI Test',
+        color: Colors.white,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              
+              const SizedBox(height: 16.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    vertical: 15.0, horizontal: 30.0),
+                child: Text(
+                  '16 characters of Meyers-Briggs Type Indicator',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 24.0,
+                    color: Colors.indigo[700],
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 16.0),
-                const Text(
-                  'The MBTI test can assist students in choosing a career by providing insights into their personality preferences, strengths, and potential areas of interest. By understanding their personality type, students can identify careers that align with their natural inclinations and strengths, making it easier to make informed career choices that are more likely to lead to satisfaction and success in the long term.',
-                  style: TextStyle(fontSize: 16.0),
-                  textAlign: TextAlign.justify,
+              ),
+              const SizedBox(height: 16.0),
+              const Center(
+                child: Image(
+                  image: AssetImage('assets/images/mbti/mbti.png'),
+                  width: 350,
+                  height: 350,
+                  fit: BoxFit.cover,
                 ),
-                const SizedBox(height: 16.0),
-                ElevatedButton(
+              ),
+              const SizedBox(height: 30.0),
+              Center(
+                // Centering the button
+                child: ElevatedButton(
                   onPressed: () {
                     _launchUrl(_url);
                   },
-                  child: const Text('Go to Personality Test'),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    backgroundColor: Colors.indigo[700],
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 15.0, horizontal: 25.0),
+                    textStyle: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.link, color: Colors.white),
+                      SizedBox(width: 10),
+                      Text('Do MBTI Test'),
+                    ],
+                  ),
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 30.0),
+            ],
           ),
         ),
       ),
     );
   }
-
-
-
 }
