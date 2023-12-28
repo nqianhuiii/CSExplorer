@@ -156,4 +156,8 @@ class _UniversityFormState extends State<UniversityForm> {
 
     return _courseFields!;
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 6c38cf9698dd23a714a23078f8b27bc49da112fb
