@@ -46,4 +46,17 @@ class UniversityRepo {
     }
   }
 
+  
+  Future<bool> deleteUniversity(String unversityId) async {
+    try {
+      await _firestore.collection('University').doc(unversityId).delete();
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error deleting FAQ: $e');
+      }
+      return false;
+    }
+  }
+
 }

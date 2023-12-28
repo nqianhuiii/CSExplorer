@@ -138,6 +138,34 @@ Future<void> _updateUniversity(int index) async {
     } else {}
   }
 }
+
+
+  void _deleteUniversity(int index) async {
+    BuildContext dialogContext = context;
+    bool success = await universityRepo.deleteUniversity(universities[index].id);
+    if (success) {
+      _loadUniversity(); 
+    } else {
+      // ignore: use_build_context_synchronously
+      showDialog(
+        context: dialogContext,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: const Text('Cannot Delete the University'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(dialogContext).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
   List<String> uniImage = [
     'UTM.jpg',
     'UM.jpg',
@@ -233,7 +261,7 @@ Widget build(BuildContext context) {
                                     color: const Color.fromARGB(
                                         255, 251, 117, 117),
                                     onPressed: () {
-                                      // Handle delete action
+                                      _deleteUniversity(index);
                                     },
                                   ),
                                 ],
