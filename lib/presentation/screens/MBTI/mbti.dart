@@ -72,7 +72,7 @@ class CheckMbtiPage extends StatelessWidget {
               const SizedBox(height: 16.0),
               Padding(
                 padding: const EdgeInsets.symmetric(
-                    vertical: 15.0, horizontal: 30.0),
+                    vertical: 15.0, horizontal: 35.0),
                 child: Text(
                   '16 characters of Meyers-Briggs Type Indicator',
                   textAlign: TextAlign.center,

@@ -1,8 +1,5 @@
-import 'package:csexplorer/bottom_navbar.dart';
 import 'package:csexplorer/firebase_config.dart';
-import 'package:csexplorer/presentation/screens/Authentication/login.dart';
 import 'package:csexplorer/presentation/screens/Authentication/signup.dart';
-import 'package:csexplorer/presentation/screens/Profile/profile_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 

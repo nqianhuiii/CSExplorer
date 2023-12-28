@@ -109,10 +109,10 @@ class _UniversityFormState extends State<UniversityForm> {
                       }
 
                       University university = University(
-                          _universityController.text,
-                          _locationController.text,
-                          _descriptionController.text,
-                          _backgroundController.text,
+                          name:_universityController.text,
+                          location:_locationController.text,
+                          description: _descriptionController.text,
+                          background:_backgroundController.text,
                           courseNames: courseNames);
 
                       _uniRepository.addUniversity(university);
