@@ -26,10 +26,12 @@ class _HomeState extends State<Home> {
     User? user = await _authService.getCurrentUser();
     if (user != null) {
       Map<String, dynamic>? data = await _authService.getUserData(user.uid);
-      setState(() {
-        userData = data;
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          userData = data;
+          isLoading = false;
+        });
+      }
     }
   }
 

@@ -1,6 +1,7 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:csexplorer/presentation/screens/Authentication/login.dart';
-import 'package:csexplorer/presentation/screens/Profile/profile_screen.dart';
 import 'package:csexplorer/service/Validator.dart';
 import 'package:csexplorer/service/authService.dart';
 import 'package:flutter/material.dart';
@@ -136,7 +137,7 @@ class _SignupPageState extends State<SignupPage> {
                           String email = emailController.text;
                           String password = passwordController.text;
 
-                          signUp(username, email, password, role);
+                          signUp(context, username, email, password, role);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -175,9 +176,10 @@ class _SignupPageState extends State<SignupPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const LoginPage(
-                                      title: 'Sign in',
-                                    )),
+                              builder: (context) => const LoginPage(
+                                title: 'Sign in',
+                              ),
+                            ),
                           );
                         },
                         child: const Text(
@@ -197,20 +199,48 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-  void signUp(
-      String username, String email, String password, String role) async {
+  void signUp(BuildContext context, String username, String email,
+      String password, String role) async {
     const CircularProgressIndicator();
     if (_formkey.currentState!.validate()) {
-      await _authService.signUp(username, email, password, role);
-      routeSignup();
+      String message =
+          await _authService.signUp(username, email, password, role);
+      if (message.isNotEmpty) {
+        showErrorMessage(context, message);
+      } else {
+        routeSignup();
+      }
     }
   }
 
   void routeSignup() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const ProfilePage(),
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('Create Account'),
+        content: const Text(
+            'Verification email sent. Please check your email to verify your account.'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LoginPage(
+                  title: 'Sign in',
+                ),
+              ),
+            ),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void showErrorMessage(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
       ),
     );
   }

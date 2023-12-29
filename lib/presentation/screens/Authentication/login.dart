@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csexplorer/admin_bottom_navbar.dart';
 import 'package:csexplorer/bottom_navbar.dart';
@@ -224,8 +226,27 @@ class _LoginPageState extends State<LoginPage> {
 
   void signIn(String email, String password) async {
     if (_formkey.currentState!.validate()) {
-      await _authService.logIn(email, password);
-      routeLogin();
+      String message = await _authService.logIn(email, password);
+      if (message.isNotEmpty) {
+        showErrorMessage(context, message);
+      }
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        if (user.emailVerified) {
+          routeLogin();
+        } else {
+          showErrorMessage(context,
+              "Email is not verified. Please check your email for verification.");
+        }
+      }
     }
+  }
+
+  void showErrorMessage(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
   }
 }

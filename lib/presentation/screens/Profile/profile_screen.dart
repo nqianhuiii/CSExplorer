@@ -28,10 +28,12 @@ class _ProfilePageState extends State<ProfilePage> {
     User? user = await _authService.getCurrentUser();
     if (user != null) {
       Map<String, dynamic>? data = await _authService.getUserData(user.uid);
-      setState(() {
-        userData = data;
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          userData = data;
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -55,7 +57,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   const SizedBox(height: 10),
                   Container(
                     width: 360,
-                    height: 180,
+                    height: 170,
                     decoration: BoxDecoration(
                       color: Colors.indigo[700],
                       borderRadius: BorderRadius.circular(15),
@@ -118,7 +120,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   const SizedBox(height: 30),
                   Container(
                     width: 360,
-                    height: 80,
+                    height: 70,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -138,7 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   const SizedBox(height: 15),
                   Container(
                     width: 360,
-                    height: 80,
+                    height: 70,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -158,7 +160,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   const SizedBox(height: 15),
                   Container(
                     width: 360,
-                    height: 80,
+                    height: 70,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -183,7 +185,74 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 70),
+                  const SizedBox(height: 15),
+                  Container(
+                    width: 360,
+                    height: 70,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: ListTile(
+                      title: const Text('Delete Account'),
+                      trailing: IconButton(
+                        icon: Icon(
+                          Icons.edit,
+                          size: 30,
+                          color: Colors.grey.withOpacity(0.8),
+                        ),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Delete your Account?'),
+                                content: const Text(
+                                    '''If you select "Delete" Your app data will also be deleted and you won't be able to retrieve it.
+
+Confirm to delete your account?.'''),
+                                actions: [
+                                  TextButton(
+                                    child: const Text(
+                                      'Cancel',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: const Text(
+                                      'Delete',
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      await _authService.deleteAccount();
+                                      Navigator.of(context, rootNavigator: true)
+                                          .pushAndRemoveUntil(
+                                              CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      const LoginPage(
+                                                        title: 'Sign in',
+                                                      )),
+                                              (route) => false);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 50),
                   SizedBox(
                     height: 50,
                     width: 250,
