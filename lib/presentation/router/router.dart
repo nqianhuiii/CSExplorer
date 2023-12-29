@@ -1,6 +1,7 @@
 import 'package:csexplorer/bottom_NavBar.dart';
 import 'package:csexplorer/data/model/university.dart';
 import 'package:csexplorer/main.dart';
+import 'package:csexplorer/presentation/screens/Courses/courses_main.dart';
 import 'package:csexplorer/presentation/screens/FAQ/manage_faq.dart';
 import 'package:csexplorer/presentation/screens/Feedback/feedback_form.dart';
 import 'package:csexplorer/presentation/screens/Profile/profile_screen.dart';
@@ -22,6 +23,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const ManageFAQ());
       case '/universityDetails': 
         return MaterialPageRoute(builder: (_) => UniversityDetails(universityArguments: routeSettings.arguments as University));   
+      case '/course':
+        return MaterialPageRoute(builder: (_) => const CourseMain());
       default:
         return null;
     }

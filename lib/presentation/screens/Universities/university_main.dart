@@ -21,9 +21,10 @@ class _UniversityMainState extends State<UniversityMain> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
           title: "Tertiary Institution",
-          description: "Public and Private University/College/Vocational"),
+          description: "Public and Private University/College/Vocational",
+          colour: Colors.indigo.shade700),
       backgroundColor: Colors.grey[100],
       body: FutureBuilder<List<University>>(
           future: _universityRepo.fetchUniList(),

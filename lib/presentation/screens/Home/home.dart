@@ -1,4 +1,5 @@
 import "package:csexplorer/customWidget/CustomHomeContainer.dart";
+import "package:csexplorer/presentation/screens/Courses/courses_main.dart";
 import "package:csexplorer/presentation/screens/Universities/university_main.dart";
 import "package:flutter/material.dart";
 
@@ -63,11 +64,18 @@ class _HomeState extends State<Home> {
                 },
               ),
               const SizedBox(height: 15),
-              const CustomHomeContainer(
+              CustomHomeContainer(
                   link: 'assets/images/main/computerScience.jpg',
                   title: "Computer Science Courses",
                   description:
-                      "View list of public and private universities, colleges, and vocational schools that provide computer science"),
+                      "View types of courses under computer science and its details",
+                onTapCallback: (context) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const CourseMain()));
+                },
+              ),                   
               const SizedBox(height: 15),
               const CustomHomeContainer(
                   link: 'assets/images/main/scholarship.jpg',
