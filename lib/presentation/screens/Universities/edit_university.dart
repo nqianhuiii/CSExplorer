@@ -1,5 +1,4 @@
 
-
 import 'package:csexplorer/data/model/university.dart';
 import 'package:csexplorer/data/repositories/university_repo.dart';
 import 'package:flutter/material.dart';
