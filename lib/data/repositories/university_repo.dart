@@ -15,19 +15,48 @@ class UniversityRepo {
     }
   }
 
+
+
   Future<List<University>> fetchUniList() async {
     try {
-      QuerySnapshot querySnapshot =
-          await _firestore.collection('University').get();
-      List<University> uniList = querySnapshot.docs.map((doc) {
-        return University.fromJson(doc.data() as Map<String, dynamic>);
+      final querySnapshot = await _firestore.collection('University').get();
+      return querySnapshot.docs.map((doc) {
+        return University.fromSnapshot(doc);
       }).toList();
-      return uniList;
     } catch (e) {
       if (kDebugMode) {
-        print('Error fetching university list: $e');
+        print('Error getting university: $e');
       }
-      rethrow;
+      return [];
     }
   }
+
+
+
+  
+ Future<bool> editUniversity(String universityId, University editedUniversity) async {
+    try {
+      await _firestore.collection('University').doc(universityId).update(editedUniversity.toJson());
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error editing University: $e');
+      }
+      return false;
+    }
+  }
+
+  
+  Future<bool> deleteUniversity(String unversityId) async {
+    try {
+      await _firestore.collection('University').doc(unversityId).delete();
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error deleting FAQ: $e');
+      }
+      return false;
+    }
+  }
+
 }

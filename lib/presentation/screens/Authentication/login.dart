@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:csexplorer/admin_bottom_navbar.dart';
 import 'package:csexplorer/bottom_navbar.dart';
 import 'package:csexplorer/presentation/screens/Profile/change_password.dart';
 import 'package:csexplorer/presentation/screens/Authentication/signup.dart';
-import 'package:csexplorer/presentation/screens/Home/adminHome.dart';
 import 'package:csexplorer/service/Validator.dart';
 import 'package:csexplorer/service/authService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -46,132 +46,135 @@ class _LoginPageState extends State<LoginPage> {
             fontSize: 30),
         backgroundColor: Colors.indigo[700],
       ),
-      body: Form(
-        key: _formkey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-              child: Text(
-                "Sign in",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-              child: TextFormField(
-                controller: emailController,
-                decoration: const InputDecoration(labelText: "Email"),
-                validator: (value) => Validator.validateEmail(value!),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-              child: TextFormField(
-                controller: passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(labelText: "Password"),
-                validator: (value) => Validator.validatePassword(value!),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ChangePassword(),
-                  ),
-                );
-              },
-              child: const Text(
-                'Forgot Password?',
-                style: TextStyle(
-                  color: Color.fromRGBO(48, 63, 159, 1),
-                  fontWeight: FontWeight.bold,
+      body: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        child: Form(
+          key: _formkey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                child: Text(
+                  "Sign in",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              child: Center(
-                child: SizedBox(
-                  height: 50,
-                  width: 250,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      String email = emailController.text;
-                      String password = passwordController.text;
-                      signIn(email, password);
-                      /* if (_formkey.currentState!.validate()) {
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                child: TextFormField(
+                  controller: emailController,
+                  decoration: const InputDecoration(labelText: "Email"),
+                  validator: (value) => Validator.validateEmail(value!),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                child: TextFormField(
+                  controller: passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(labelText: "Password"),
+                  validator: (value) => Validator.validatePassword(value!),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ChangePassword(),
+                    ),
+                  );
+                },
+                child: const Text(
+                  'Forgot Password?',
+                  style: TextStyle(
+                    color: Color.fromRGBO(48, 63, 159, 1),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                child: Center(
+                  child: SizedBox(
+                    height: 50,
+                    width: 250,
+                    child: ElevatedButton(
+                      onPressed: () async {
                         String email = emailController.text;
                         String password = passwordController.text;
-                        User? user = await _authService.logIn(email, password);
-
-                        if (user != null) {
-                          // ignore: use_build_context_synchronously
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const BottomNavBar(),
-                            ),
-                          );
-                        }
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content:
-                                    Text('Invalid sign in, please try again')));
-                      } */
-                    },
-                    style: ElevatedButton.styleFrom(
-                      textStyle: const TextStyle(
-                        fontWeight: FontWeight.bold,
+                        signIn(email, password);
+                        /* if (_formkey.currentState!.validate()) {
+                          String email = emailController.text;
+                          String password = passwordController.text;
+                          User? user = await _authService.logIn(email, password);
+        
+                          if (user != null) {
+                            // ignore: use_build_context_synchronously
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const BottomNavBar(),
+                              ),
+                            );
+                          }
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content:
+                                      Text('Invalid sign in, please try again')));
+                        } */
+                      },
+                      style: ElevatedButton.styleFrom(
+                        textStyle: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        foregroundColor: Colors.grey[100],
+                        backgroundColor: Colors.indigo[700],
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
                       ),
-                      foregroundColor: Colors.grey[100],
-                      backgroundColor: Colors.indigo[700],
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
+                      child: const Text('Sign in'),
                     ),
-                    child: const Text('Sign in'),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 25),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    const Text(
-                      "No Account? ",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SignupPage(
-                                    title: 'Sign up',
-                                  )),
-                        );
-                      },
-                      child: const Text(
-                        "Sign up",
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 25),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      const Text(
+                        "No Account? ",
                         style: TextStyle(
-                          color: Color.fromRGBO(48, 63, 159, 1),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                  ]),
-            ),
-          ],
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SignupPage(
+                                      title: 'Sign up',
+                                    )),
+                          );
+                        },
+                        child: const Text(
+                          "Sign up",
+                          style: TextStyle(
+                            color: Color.fromRGBO(48, 63, 159, 1),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ]),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -189,7 +192,7 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const adminHome(),
+              builder: (context) => const AdminBottomNavBar(),
             ),
           );
         } else {

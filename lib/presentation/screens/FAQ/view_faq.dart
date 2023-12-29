@@ -109,7 +109,7 @@ class _FAQTileState extends State<FAQTile> {
                   Icons.question_answer, // You can change this to the desired icon
                   color: Colors.indigo[700],
                 ),
-                SizedBox(width: 8), // Add some space between the icon and text
+                const SizedBox(width: 8), // Add some space between the icon and text
                 Expanded(
                   child: Text(
                     widget.question,

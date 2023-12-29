@@ -1,19 +1,19 @@
 import 'package:csexplorer/data/model/university.dart';
 import 'package:csexplorer/data/repositories/university_repo.dart';
 import 'package:flutter/material.dart';
-
 class UniversityForm extends StatefulWidget {
   const UniversityForm({super.key});
-
   @override
   State<UniversityForm> createState() => _UniversityFormState();
 }
-
 class _UniversityFormState extends State<UniversityForm> {
   final _universityController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _locationController = TextEditingController();
   final _backgroundController = TextEditingController();
+  final _numCourseController = TextEditingController();
+  List<TextEditingController> _courseNameController = [];
+  Widget? _courseFields;
 
   final UniversityRepo _uniRepository = UniversityRepo();
 
@@ -25,7 +25,6 @@ class _UniversityFormState extends State<UniversityForm> {
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        physics: const NeverScrollableScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
           child: Column(
@@ -74,6 +73,25 @@ class _UniversityFormState extends State<UniversityForm> {
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10)),
                       hintText: 'Background of the university')),
+              const SizedBox(height: 20),
+              Text(
+                "Number of computer scince courses offered",
+                style: TextStyle(
+                  color: Colors.grey[600],
+                ),
+              ),
+              TextFormField(
+                  controller: _numCourseController,
+                  onChanged: (value) {
+                    setState(() {
+                      //dynamically build fields
+                      _courseFields = _buildCourseFields();
+                    });
+                  },
+                  decoration:
+                      const InputDecoration(border: UnderlineInputBorder())),
+              // display empty container if that is null
+              _courseFields ?? Container(),
               const SizedBox(height: 80),
               Center(
                 child: SizedBox(
@@ -81,11 +99,21 @@ class _UniversityFormState extends State<UniversityForm> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () async {
+                      int numCourse =
+                          int.tryParse(_numCourseController.text) ?? 0;
+
+                      List<String> courseNames = [];
+                      for (int i = 0; i < numCourse; i++) {
+                        String courseName = _courseNameController[i].text;
+                        courseNames.add(courseName);
+                      }
+
                       University university = University(
-                          _universityController.text,
-                          _locationController.text,
-                          _descriptionController.text,
-                          _backgroundController.text);
+                          name:_universityController.text,
+                          location:_locationController.text,
+                          description: _descriptionController.text,
+                          background:_backgroundController.text,
+                          courseNames: courseNames);
 
                       _uniRepository.addUniversity(university);
                     },
@@ -103,5 +131,32 @@ class _UniversityFormState extends State<UniversityForm> {
         ),
       ),
     );
+  
+  }
+
+  Widget _buildCourseFields() {
+    int numCourse = int.tryParse(_numCourseController.text) ?? 0;
+
+    _courseNameController =
+        List.generate(numCourse, (index) => TextEditingController());
+
+    List<Widget> courseFields = List.generate(
+        numCourse,
+        (index) => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                Text("CS Course ${index + 1}"),
+                TextField(controller: _courseNameController[index])
+              ],
+            ));
+
+    _courseFields = Column(children: courseFields);
+
+    return _courseFields!;
   }
 }
+
+
