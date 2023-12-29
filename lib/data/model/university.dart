@@ -28,8 +28,7 @@ class University {
       : name = json['name'],
         location = json['location'],
         description = json['description'],
-        background = json['background'],
-        imageIndex = json['imageIndex'] ?? 0, // Default or handle null
+        background = json['background'], // Default or handle null
         courseNames = List<String>.from(json['courseNames'] ?? []);
 
   University.fromSnapshot(DocumentSnapshot snapshot)
@@ -37,7 +36,6 @@ class University {
         name = snapshot['name'],
         location = snapshot['location'],
         description = snapshot['description'],
-        background = snapshot['background'],
-        imageIndex = snapshot['imageIndex'] ?? 0, // Default or handle null
+        background = snapshot['background'],// Default or handle null
         courseNames = List<String>.from(snapshot['courseNames'] ?? []);
 }
