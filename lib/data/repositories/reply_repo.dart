@@ -75,7 +75,7 @@ class ReplyRepository {
     }
   }
 
-   Future<int> getLikesForum(String comment) async {
+  Future<int> getLikesForum(String comment) async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     try {
       QuerySnapshot querySnapshot = await firestore
@@ -95,8 +95,7 @@ class ReplyRepository {
     }
   }
 
-  Future<int> getLikes(String comment) async
-  {
+  Future<int> getLikes(String comment) async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     try {
       QuerySnapshot querySnapshot = await firestore
@@ -115,8 +114,4 @@ class ReplyRepository {
       rethrow;
     }
   }
-
- 
-
-
 }

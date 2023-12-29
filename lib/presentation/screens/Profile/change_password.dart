@@ -14,7 +14,6 @@ class _ForgotPasswordState extends State<ChangePassword> {
   final AuthService _authService = AuthService();
 
   final _formkey = GlobalKey<FormState>();
-  bool _obscurePassword = true;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 

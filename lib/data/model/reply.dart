@@ -1,5 +1,4 @@
-class Reply
-{
+class Reply {
   String reply;
   int likes;
 
@@ -18,5 +17,3 @@ class Reply
       : reply = json['reply'] ?? '',
         likes = json['likes'] ?? 0;
 }
-
-

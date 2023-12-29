@@ -19,7 +19,7 @@ class _ForumDiscussionState extends State<ForumDiscussion> {
   late Timer _refreshTimer;
   final int refreshIntervalInMilliseconds = 1000;
   late Future<List<String>> _replyList = ReplyRepository.retrieveReplies();
-  List<String> updatedList=[];
+  List<String> updatedList = [];
   List<int> likesCounts = [];
 
   @override
@@ -168,7 +168,6 @@ class _ForumDiscussionState extends State<ForumDiscussion> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-
                   ),
                   Expanded(
                     child: ListView.builder(
