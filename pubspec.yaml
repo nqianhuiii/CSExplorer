@@ -74,6 +74,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/university/
+    - assets/images/course/
     - assets/images/main/
     - assets/images/mbti/
 

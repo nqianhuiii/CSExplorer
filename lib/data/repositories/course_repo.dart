@@ -19,7 +19,7 @@ class CourseRepo {
 
   Future<List<Course>> fetchCourseList() async {
     try {
-      final querySnapshot = await _firestore.collection('University').get();
+      final querySnapshot = await _firestore.collection('Course').get();
       return querySnapshot.docs.map((doc) {
         return Course.fromSnapshot(doc);
       }).toList();

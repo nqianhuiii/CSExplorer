@@ -16,8 +16,8 @@ class Course{
     return {
       'name': name,
       'description': description,
-      'background': academicRequirements,
-      'courseNames': jobOpportunity,
+      'academicRequirements': academicRequirements,
+      'jobOpportunity': jobOpportunity,
     };
   }
 
