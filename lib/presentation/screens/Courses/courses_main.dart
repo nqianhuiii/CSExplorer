@@ -107,30 +107,6 @@ class _CourseMainState extends State<CourseMain> {
           }
         },
       ),
-      floatingActionButton: Stack(
-        children: [
-          Positioned(
-            bottom: 60,
-            right: 10,
-            child: FloatingActionButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const CourseForm(),
-                  ),
-                );
-              },
-              backgroundColor: Colors.indigo.shade700,
-              elevation: 0,
-              child: const Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

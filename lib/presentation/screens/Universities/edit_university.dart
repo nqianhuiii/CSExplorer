@@ -1,111 +1,135 @@
+import "package:csexplorer/data/model/university.dart";
+import "package:csexplorer/data/repositories/university_repo.dart";
+import "package:flutter/material.dart";
 
-import 'package:csexplorer/data/model/university.dart';
-import 'package:csexplorer/data/repositories/university_repo.dart';
-import 'package:flutter/material.dart';
+class EditUniversityPage extends StatefulWidget {
+  final University university;
 
+  EditUniversityPage({required this.university});
 
-  final UniversityRepo universityRepo = UniversityRepo();
+  @override
+  _EditUniversityPageState createState() => _EditUniversityPageState();
+}
 
+class _EditUniversityPageState extends State<EditUniversityPage> {
   final TextEditingController editNameController = TextEditingController();
   final TextEditingController editLocationController = TextEditingController();
-  final TextEditingController editDescriptionController = TextEditingController();
-  final TextEditingController editBackgroundController = TextEditingController();
+  final TextEditingController editDescriptionController =
+      TextEditingController();
+  final TextEditingController editBackgroundController =
+      TextEditingController();
+  final TextEditingController editCourseController = TextEditingController();
+  final UniversityRepo universityRepo = UniversityRepo();
 
-  Future<void> editUniversity(BuildContext context, int index) async {
-    List<University> universities = await universityRepo.fetchUniList();
+  List<TextEditingController> _courseControllers = [];
 
-    if (index >= 0 && index < universities.length) {
-      University selectedUniversity = universities[index];
-      editNameController.text = selectedUniversity.name;
-      editLocationController.text = selectedUniversity.location;
-      editDescriptionController.text = selectedUniversity.description;
-      editBackgroundController.text = selectedUniversity.background;
-
-      // ignore: use_build_context_synchronously
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Edit University'),
-            content: SizedBox(
-              height: 500,
-              child: Column(
-                children: [
-                  TextField(
-                    decoration: const InputDecoration(labelText: 'Name'),
-                    controller: editNameController,
-                  ),
-                  TextField(
-                    decoration: const InputDecoration(labelText: 'Location'),
-                    controller: editLocationController,
-                  ),
-                  TextField(
-                    decoration: const InputDecoration(labelText: 'Description'),
-                    controller: editDescriptionController,
-                  ),
-                  TextField(
-                    decoration: const InputDecoration(labelText: 'Background'),
-                    controller: editBackgroundController,
-                  ),
-                ],
-              ),
-            ),
-            actions: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.indigo[700],
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('Cancel'),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.indigo[700],
-                ),
-                onPressed: () async {
-                  await _updateUniversity(index);
-                  // ignore: use_build_context_synchronously
-                  Navigator.pop(context);
-                },
-                child: const Text('Save Changes'),
-              ),
-            ],
-          );
-        },
-      );
-    } else {
-     
-    }
+  @override
+  void initState() {
+    super.initState();
+    editNameController.text = widget.university.name;
+    editLocationController.text = widget.university.location;
+    editDescriptionController.text = widget.university.description;
+    editBackgroundController.text = widget.university.background;
+    editCourseController.text = widget.university.courseNames.join('\n');
   }
 
-  Future<void> _updateUniversity(int index) async {
-    List<University> universities = await universityRepo.fetchUniList();
-
+  Future<void> _updateUniversity() async {
     String editedName = editNameController.text;
     String editedLocation = editLocationController.text;
     String editedDescription = editDescriptionController.text;
     String editedBackground = editBackgroundController.text;
-
+    List<String> editedCourseName = editCourseController.text.split('\n');
     if (editedName.isNotEmpty) {
       University editedUniversity = University(
         name: editedName,
         location: editedLocation,
         description: editedDescription,
         background: editedBackground,
+        courseNames: editedCourseName,
       );
 
-      bool success = await universityRepo.editUniversity(universities[index].id, editedUniversity);
-      if (success) {
-        editNameController.clear();
-        editLocationController.clear();
-        editDescriptionController.clear();
-        editBackgroundController.clear();
-      } else {
-        
-      }
+      await universityRepo.editUniversity(
+          widget.university.id, editedUniversity);
     }
   }
 
-
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Edit University'),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Name", style: TextStyle(color: Colors.grey[600])),
+              TextField(
+                controller: editNameController,
+                decoration:
+                    const InputDecoration(border: UnderlineInputBorder()),
+              ),
+              SizedBox(height: 20),
+              Text("Location", style: TextStyle(color: Colors.grey[600])),
+              TextField(
+                controller: editLocationController,
+                decoration:
+                    const InputDecoration(border: UnderlineInputBorder()),
+              ),
+              SizedBox(height: 20),
+              Text("Description", style: TextStyle(color: Colors.grey[600])),
+              TextField(
+                controller: editDescriptionController,
+                decoration: const InputDecoration(
+                    border: UnderlineInputBorder(),
+                    hintText: 'Short description about the university'),
+              ),
+              SizedBox(height: 20),
+              Text("Introduce the university",
+                  style: TextStyle(color: Colors.grey[600])),
+              TextFormField(
+                  controller: editBackgroundController,
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      hintText: 'Background of the university')),
+              SizedBox(height: 20),
+              Text("Number of computer science courses offered",
+                  style: TextStyle(color: Colors.grey[600])),
+              TextFormField(
+                  controller: editCourseController,
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      hintText: 'Course of the university')),
+              SizedBox(height: 80),
+              Center(
+                child: SizedBox(
+                  width: 250,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      await _updateUniversity();
+                      Navigator.pop(context, true);
+                    },
+                    child: Text('Save Changes'),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.indigo[700],
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

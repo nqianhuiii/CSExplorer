@@ -110,28 +110,6 @@ class _UniversityMainState extends State<UniversityMain> {
               );
             }
           }),
-      floatingActionButton: Stack(
-        children: [
-          Positioned(
-            bottom: 60,
-            right: 10,
-            child: FloatingActionButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const UniversityForm()));
-              },
-              backgroundColor: Colors.indigo[700],
-              elevation: 0,
-              child: const Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
