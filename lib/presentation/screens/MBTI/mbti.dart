@@ -47,7 +47,7 @@ class CheckMbtiPage extends StatelessWidget {
               ),
               SizedBox(height: 7),
               Text(
-                "Get to know your personality with the MBTI test",
+                "Get to know your personality",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 17,

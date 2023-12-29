@@ -42,7 +42,13 @@ class _UniversityMainState extends State<ManageUniversity> {
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: const Text('CANCEL'),
+               style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.indigo[700],
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () async {
@@ -62,6 +68,7 @@ class _UniversityMainState extends State<ManageUniversity> {
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
+                            
                             child: const Text('OK'),
                           ),
                         ],
@@ -71,7 +78,13 @@ class _UniversityMainState extends State<ManageUniversity> {
                 }
                 Navigator.of(context).pop(); // Close the confirmation dialog
               },
-              child: const Text('DELETE'),
+               style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.indigo[700],
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+              child: const Text('Delete'),
             ),
           ],
         );
