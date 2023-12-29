@@ -63,9 +63,9 @@
     },
     {
       "name": "cross_file",
-      "rootUri": "file:///Users/mango/.pub-cache/hosted/pub.dev/cross_file-0.3.3+8",
+      "rootUri": "file:///Users/mango/.pub-cache/hosted/pub.dev/cross_file-0.3.3+7",
       "packageUri": "lib/",
-      "languageVersion": "3.2"
+      "languageVersion": "3.0"
     },
     {
       "name": "crypto",
@@ -183,9 +183,9 @@
     },
     {
       "name": "http",
-      "rootUri": "file:///Users/mango/.pub-cache/hosted/pub.dev/http-1.1.2",
+      "rootUri": "file:///Users/mango/.pub-cache/hosted/pub.dev/http-1.1.0",
       "packageUri": "lib/",
-      "languageVersion": "3.2"
+      "languageVersion": "3.0"
     },
     {
       "name": "http_parser",
@@ -375,9 +375,9 @@
     },
     {
       "name": "url_launcher_web",
-      "rootUri": "file:///Users/mango/.pub-cache/hosted/pub.dev/url_launcher_web-2.2.2",
+      "rootUri": "file:///Users/mango/.pub-cache/hosted/pub.dev/url_launcher_web-2.2.0",
       "packageUri": "lib/",
-      "languageVersion": "3.2"
+      "languageVersion": "3.1"
     },
     {
       "name": "url_launcher_windows",
@@ -410,7 +410,7 @@
       "languageVersion": "3.1"
     }
   ],
-  "generated": "2023-12-28T11:04:55.158646Z",
+  "generated": "2023-12-29T02:44:12.597889Z",
   "generator": "pub",
   "generatorVersion": "3.2.3"
 }

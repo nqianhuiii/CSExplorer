@@ -1,6 +1,5 @@
 import "package:csexplorer/customWidget/CustomHomeContainer.dart";
 import "package:csexplorer/presentation/screens/Universities/manage_university.dart";
-import "package:csexplorer/presentation/screens/Universities/university_main.dart";
 import "package:flutter/material.dart";
 
 class AdminHome extends StatefulWidget {
