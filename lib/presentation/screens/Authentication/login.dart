@@ -51,6 +51,7 @@ class _LoginPageState extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const SizedBox(height: 80),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
                 child: Text(
