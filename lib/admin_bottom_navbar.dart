@@ -1,5 +1,4 @@
 import 'package:csexplorer/presentation/screens/FAQ/manage_faq.dart';
-import 'package:csexplorer/presentation/screens/Forum/forum_main.dart';
 import 'package:csexplorer/presentation/screens/Home/adminHome.dart';
 import 'package:csexplorer/presentation/screens/Profile/profile_screen.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +63,7 @@ class _BottomNavBarState extends State<AdminBottomNavBar> {
   final List<Widget> _tabPages = [
     const Center(child: AdminHome()),
     const Center(child: ManageFAQ()),
-    const Center(child: ForumMain()),
+    const Center(child: ManageFAQ()),
     const Center(child: ProfilePage()),
   ];
 

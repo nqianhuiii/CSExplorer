@@ -155,23 +155,62 @@ Widget build(BuildContext context) {
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 15),
-                            child: SizedBox(
-                              height: 100,
-                              width: 230,
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      scholarship.providerName,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 15, vertical: 15),
+                  child: SizedBox(
+                    height: 100,
+                    width: 230,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          scholarship.providerName,
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold, 
+                                              fontSize: 13.0),
+                                        ),
+                                        const SizedBox(
+                                          height: 1,
+                                        ),
+                                      ],
                                     ),
-                                  ]),
-                            ),
-                          )
+                                  ),
+                                  // Add your edit and delete icons here
+                                  IconButton(
+                                      icon: const Icon(Icons.edit),
+                                      onPressed: () {
+                                        editScholarship(context, index);
+                                      }),
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.delete,
+                                    ),
+                                    color: const Color.fromARGB(
+                                        255, 251, 117, 117),
+                                    onPressed: () {
+                                      _deleteScholarship(index);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                         ],
                       ),
                     ),
