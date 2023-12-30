@@ -7,7 +7,8 @@ import 'package:csexplorer/service/authService.dart';
 import 'package:flutter/material.dart';
 import 'package:csexplorer/data/model/forum.dart' as Forum;
 
-class ManageForumDiscussion extends StatefulWidget {
+class ManageForumDiscussion extends StatefulWidget 
+{
   final Forum.Forum forum;
 
   const  ManageForumDiscussion({Key? key, required this.forum}) : super(key: key);
@@ -161,6 +162,8 @@ class _ManageForumDiscussionState extends State<ManageForumDiscussion> {
     }
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
     double cardWidth = MediaQuery.of(context).size.width * 0.9;
@@ -262,6 +265,7 @@ class _ManageForumDiscussionState extends State<ManageForumDiscussion> {
                           String name = nameList[index];
                           String comment = replies[index];
                           String replyId = replyList[index];
+                          String authorId = author[index];
 
                           return Card(
                             elevation: 5,
@@ -313,6 +317,13 @@ class _ManageForumDiscussionState extends State<ManageForumDiscussion> {
                                           onPressed: () async {
                                             await ForumRepository.deleteReply(
                                                 widget.forum.subject, replyId);
+                                            ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                  'Reply deleted. Notification sent to email.'),
+                                            ),
+                                          );
                                           },
                                         ),
                                     ],
