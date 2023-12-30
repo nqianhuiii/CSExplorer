@@ -1,5 +1,4 @@
 import 'package:csexplorer/data/model/scholarship.dart';
-import 'package:csexplorer/data/repositories/course_repo.dart';
 import 'package:csexplorer/data/repositories/scholarship_repo.dart';
 import 'package:flutter/material.dart';
 

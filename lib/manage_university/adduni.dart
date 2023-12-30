@@ -1,34 +1,34 @@
-// addscholar.dart
+// adduni.dart
 
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
-class Scholarship {
-  final String providerName;
+class University {
+  final String uniName;
   final String description;
-  final String applicationRequirement;
+  final String uniCourse;
 
-  Scholarship({
-    required this.providerName,
+  University({
+    required this.uniName,
     required this.description,
-    required this.applicationRequirement,
+    required this.uniCourse,
   });
 }
 
-class AddScholarPage extends StatefulWidget {
+class AddUniPage extends StatefulWidget {
   @override
-  _AddScholarPageState createState() => _AddScholarPageState();
+  _AddUniPageState createState() => _AddUniPageState();
 }
 
-class _AddScholarPageState extends State<AddScholarPage> {
+class _AddUniPageState extends State<AddUniPage> {
   File? _image;
   final TextEditingController providerNameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController applicationRequirementController =
       TextEditingController();
 
-  List<Scholarship> scholarships = [];
+  List<University> uni = [];
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
@@ -41,16 +41,16 @@ class _AddScholarPageState extends State<AddScholarPage> {
     }
   }
 
-  void _submitScholarship() {
+  void _submitUniversity() {
     if (providerNameController.text.isNotEmpty &&
         descriptionController.text.isNotEmpty &&
         applicationRequirementController.text.isNotEmpty) {
       setState(() {
-        scholarships.add(
-          Scholarship(
-            providerName: providerNameController.text,
+        uni.add(
+          University(
+            uniName: providerNameController.text,
             description: descriptionController.text,
-            applicationRequirement: applicationRequirementController.text,
+            uniCourse: applicationRequirementController.text,
           ),
         );
       });
@@ -63,7 +63,7 @@ class _AddScholarPageState extends State<AddScholarPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ScholarshipsListPage(scholarships),
+          builder: (context) => UniListPage(uni),
         ),
       );
     }
@@ -73,7 +73,7 @@ class _AddScholarPageState extends State<AddScholarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Scholar Page'),
+        title: Text('Add University Page'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -84,7 +84,7 @@ class _AddScholarPageState extends State<AddScholarPage> {
           IconButton(
             icon: Icon(Icons.save),
             onPressed: () {
-              _submitScholarship();
+              _submitUniversity();
             },
           ),
         ],
@@ -116,7 +116,7 @@ class _AddScholarPageState extends State<AddScholarPage> {
             TextField(
               controller: providerNameController,
               decoration: InputDecoration(
-                labelText: 'Scholarship Provider Name',
+                labelText: 'University Name',
               ),
             ),
             SizedBox(height: 20.0),
@@ -132,7 +132,7 @@ class _AddScholarPageState extends State<AddScholarPage> {
               maxLines: null,
               keyboardType: TextInputType.multiline,
               decoration: InputDecoration(
-                labelText: 'Application Requirement',
+                labelText: 'Course Offered',
               ),
             ),
             SizedBox(height: 20.0),
@@ -143,23 +143,23 @@ class _AddScholarPageState extends State<AddScholarPage> {
   }
 }
 
-class ScholarshipsListPage extends StatelessWidget {
-  final List<Scholarship> scholarships;
+class UniListPage extends StatelessWidget {
+  final List<University> uni;
 
-  ScholarshipsListPage(this.scholarships);
+  UniListPage(this.uni);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Scholarships List'),
+        title: Text('University List'),
       ),
       body: ListView.builder(
-        itemCount: scholarships.length,
+        itemCount: uni.length,
         itemBuilder: (context, index) {
           return ListTile(
-            title: Text(scholarships[index].providerName),
-            subtitle: Text(scholarships[index].description),
+            title: Text(uni[index].uniName),
+            subtitle: Text(uni[index].description),
             onTap: () {
               // Add navigation or details display when a scholarship is tapped
             },
@@ -171,11 +171,11 @@ class ScholarshipsListPage extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AddScholarPage(),
+              builder: (context) => AddUniPage(),
             ),
           );
         },
-        tooltip: 'Add Scholar',
+        tooltip: 'Add Uni',
         child: Icon(Icons.add),
       ),
     );

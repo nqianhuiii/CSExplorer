@@ -2,7 +2,6 @@ import 'package:csexplorer/customWidget/CustomAppBar.dart';
 import 'package:csexplorer/data/model/scholarship.dart';
 import 'package:csexplorer/data/repositories/scholarship_repo.dart';
 import 'package:csexplorer/presentation/screens/Scholarships/scholarship_details.dart';
-import 'package:csexplorer/presentation/screens/Scholarships/scholarship_form.dart';
 import 'package:flutter/material.dart';
 
 class ScholarshipMain extends StatefulWidget {

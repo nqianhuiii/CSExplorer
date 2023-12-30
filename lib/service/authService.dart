@@ -1,13 +1,18 @@
-// ignore_for_file: unused_local_variable
+// ignore_for_file: unused_local_variable, use_build_context_synchronously, unused_import
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<User?> signUp(
-      String name, String email, String password, String role) async {
+  Future<String> signUp(
+    String name,
+    String email,
+    String password,
+    String role,
+  ) async {
     try {
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
@@ -15,27 +20,44 @@ class AuthService {
       setUserData(name, email, role);
 
       User? user = userCredential.user;
-      return user;
+
+      // Send email verification
+      user = _auth.currentUser;
+      await user?.sendEmailVerification();
+      await _auth.signOut();
+      return '';
     } catch (e) {
-      print(e);
-      return null;
+      return "Invalid email or email already in use.";
     }
   }
 
-  Future<User?> logIn(String email, String password) async {
+  Future<void> deleteAccount() async {
+    try {
+      User? user = _auth.currentUser;
+      await user?.delete();
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .delete();
+    } catch (e) {
+      print("Error deleting account: $e");
+    }
+  }
+
+  Future<String> logIn(String email, String password) async {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
 
       User? user = userCredential.user;
-      return user;
+      return '';
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print('No user found');
+        return 'No user found';
       } else if (e.code == 'wrong-password') {
-        print('Invalid password');
+        return 'Invalid password';
       }
-      return null;
+      return 'Invalid email or password';
     }
   }
 
@@ -59,7 +81,7 @@ class AuthService {
   Future<Map<String, dynamic>?> getUserData(String uid) async {
     var userDoc =
         await FirebaseFirestore.instance.collection('users').doc(uid).get();
-    return userDoc.data() as Map<String, dynamic>?;
+    return userDoc.data();
   }
 
   Future<void> resetPassword(String email) async {

@@ -1,7 +1,8 @@
 import "package:csexplorer/customWidget/CustomHomeContainer.dart";
-import "package:csexplorer/presentation/screens/Courses/manage_course.dart";
-import "package:csexplorer/presentation/screens/Scholarships/manage_scholarship.dart";
 import "package:csexplorer/presentation/screens/Universities/manage_university.dart";
+import 'package:csexplorer/presentation/screens/userList/user_list_screen.dart';
+import "package:csexplorer/service/authService.dart";
+import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 
 class AdminHome extends StatefulWidget {
@@ -12,43 +13,69 @@ class AdminHome extends StatefulWidget {
 }
 
 class _HomeState extends State<AdminHome> {
+  final AuthService _authService = AuthService();
+  Map<String, dynamic>? userData;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  _loadUserData() async {
+    User? user = await _authService.getCurrentUser();
+    if (user != null) {
+      Map<String, dynamic>? data = await _authService.getUserData(user.uid);
+      if (mounted) {
+        setState(() {
+          userData = data;
+          isLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Hi, Linda",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+      appBar: AppBar(
+        title: isLoading
+            ? const CircularProgressIndicator() // Show loading indicator
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Hi, ${userData!['username']}",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 7),
+                  const Text(
+                    "Have a great day today",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(height: 7),
-              Text(
-                "What information are you looking for today ?",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                ),
-              ),
-            ],
-          ),
-          backgroundColor: Colors.indigo[700],
-          toolbarHeight: 130,
-          shape: const ContinuousRectangleBorder(
-              borderRadius: BorderRadius.vertical(bottom: Radius.circular(30))),
-        ),
-        body: Padding(
+        backgroundColor: Colors.indigo[700],
+        toolbarHeight: 100,
+        shape: const ContinuousRectangleBorder(
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(30))),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
               const Text(
-                "Explore Computer Science Information",
+                "Manage Computer Science Information",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               const SizedBox(height: 20),
@@ -65,33 +92,41 @@ class _HomeState extends State<AdminHome> {
                 },
               ),
               const SizedBox(height: 15),
-              CustomHomeContainer(
-                  link: 'assets/images/main/computerScience.jpg',
-                  title: "Computer Science Courses",
-                  description:
-                      "View types of courses under computer science and its details",
-                  onTapCallback: (context) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ManageCourse()));
-                },
-              ), 
+              const CustomHomeContainer(
+                link: 'assets/images/main/computerScience.jpg',
+                title: "Computer Science Courses",
+                description:
+                    "View list of public and private universities, colleges, and vocational schools that provide computer science",
+              ),
               const SizedBox(height: 15),
+              const CustomHomeContainer(
+                link: 'assets/images/main/scholarship.jpg',
+                title: "Scholarships",
+                description:
+                    "View list of public and private universities, colleges, and vocational schools that provide computer science",
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                "View The User List",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              const SizedBox(height: 20),
               CustomHomeContainer(
-                  link: 'assets/images/main/scholarship.jpg',
-                  title: "Scholarships",
-                  description:
-                      "View list of public and private universities, colleges, and vocational schools that provide computer science",
-                  onTapCallback: (context) {
+                link: 'assets/images/main/user.png',
+                title: "List of Users",
+                description:
+                    "View list of users that have account for the application",
+                onTapCallback: (context) {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const ManageScholarship()));
+                          builder: (context) => const userListScreen()));
                 },
-              )
+              ),
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

@@ -1,37 +1,37 @@
 // scholarships_list.dart
 
-import 'addscholar.dart';
+import 'adduni.dart';
 import 'package:flutter/material.dart';
 
-class Scholarship {
-  final String providerName;
+class University {
+  final String uniName;
   final String description;
-  final String applicationRequirement;
+  final String uniCourse;
 
-  Scholarship({
-    required this.providerName,
+  University({
+    required this.uniName,
     required this.description,
-    required this.applicationRequirement,
+    required this.uniCourse,
   });
 }
 
-class ScholarshipsListPage extends StatelessWidget {
-  final List<Scholarship> scholarships;
+class UniListPage extends StatelessWidget {
+  final List<University> uni;
 
-  ScholarshipsListPage(this.scholarships);
+  UniListPage(this.uni);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Scholarships List'),
+        title: Text('University List'),
       ),
       body: ListView.builder(
-        itemCount: scholarships.length,
+        itemCount: uni.length,
         itemBuilder: (context, index) {
           return ListTile(
-            title: Text(scholarships[index].providerName),
-            subtitle: Text(scholarships[index].description),
+            title: Text(uni[index].uniName),
+            subtitle: Text(uni[index].description),
             onTap: () {
               // Add navigation or details display when a scholarship is tapped
             },
@@ -43,11 +43,11 @@ class ScholarshipsListPage extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AddScholarPage(),
+              builder: (context) => AddUniPage(),
             ),
           );
         },
-        tooltip: 'Add Scholar',
+        tooltip: 'Add University',
         child: Icon(Icons.add),
       ),
     );

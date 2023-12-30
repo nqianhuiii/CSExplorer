@@ -21,7 +21,6 @@ class _EditUniversityPageState extends State<EditUniversityPage> {
   final TextEditingController editCourseController = TextEditingController();
   final UniversityRepo universityRepo = UniversityRepo();
 
-  List<TextEditingController> _courseControllers = [];
 
   @override
   void initState() {

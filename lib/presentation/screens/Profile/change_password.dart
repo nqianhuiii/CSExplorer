@@ -121,7 +121,8 @@ class _ForgotPasswordState extends State<ChangePassword> {
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Password Reset Email Sent')));
-        routeReset();
+        // ignore: use_build_context_synchronously
+        Navigator.pop(context);
       } on FirebaseAuthException catch (e) {
         print(e);
         // ignore: use_build_context_synchronously
@@ -129,14 +130,5 @@ class _ForgotPasswordState extends State<ChangePassword> {
             .showSnackBar(const SnackBar(content: Text('Invalid Email')));
       }
     }
-  }
-
-  void routeReset() {
-    /* Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const ProfilePage(),
-      ),
-    ); */
   }
 }

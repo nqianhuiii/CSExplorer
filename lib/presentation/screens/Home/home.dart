@@ -1,7 +1,7 @@
 import "package:csexplorer/customWidget/CustomHomeContainer.dart";
-import "package:csexplorer/presentation/screens/Courses/courses_main.dart";
-import "package:csexplorer/presentation/screens/Scholarships/scholarship_main.dart";
 import "package:csexplorer/presentation/screens/Universities/university_main.dart";
+import "package:csexplorer/service/authService.dart";
+import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 
 class Home extends StatefulWidget {
@@ -12,30 +12,55 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final AuthService _authService = AuthService();
+  Map<String, dynamic>? userData;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  _loadUserData() async {
+    User? user = await _authService.getCurrentUser();
+    if (user != null) {
+      Map<String, dynamic>? data = await _authService.getUserData(user.uid);
+      if (mounted) {
+        setState(() {
+          userData = data;
+          isLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Hi, Linda",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+          title: isLoading
+              ? CircularProgressIndicator() // Show loading indicator
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Hi, ${userData!['username']}",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 7),
+                    const Text(
+                      "What information are you looking for today ?",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              SizedBox(height: 7),
-              Text(
-                "What information are you looking for today ?",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                ),
-              ),
-            ],
-          ),
           backgroundColor: Colors.indigo[700],
           toolbarHeight: 130,
           shape: const ContinuousRectangleBorder(
@@ -65,30 +90,17 @@ class _HomeState extends State<Home> {
                 },
               ),
               const SizedBox(height: 15),
-              CustomHomeContainer(
+              const CustomHomeContainer(
                   link: 'assets/images/main/computerScience.jpg',
                   title: "Computer Science Courses",
                   description:
-                      "View types of courses under computer science and its details",
-                  onTapCallback: (context) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const CourseMain()));
-                  },
-              ),                   
+                      "View list of public and private universities, colleges, and vocational schools that provide computer science"),
               const SizedBox(height: 15),
-              CustomHomeContainer(
+              const CustomHomeContainer(
                   link: 'assets/images/main/scholarship.jpg',
                   title: "Scholarships",
                   description:
-                      "View list of scholarship that can aid your tertiary education",
-                  onTapCallback: (context) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ScholarshipMain()));
-                  },),
+                      "View list of public and private universities, colleges, and vocational schools that provide computer science"),
             ],
           ),
         ));

@@ -76,6 +76,7 @@ class _ManageScholarshipState extends State<ManageScholarship> {
                     },
                   );
                 }
+                // ignore: use_build_context_synchronously
                 Navigator.of(context).pop(); // Close the confirmation dialog
               },
                style: ElevatedButton.styleFrom(

@@ -1,8 +1,7 @@
-// ignore_for_file: unused_import
+//import 'package:cloud_firestore/cloud_firestore.dart';
+// ignore_for_file: use_build_context_synchronously
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csexplorer/presentation/screens/Authentication/login.dart';
-import 'package:csexplorer/presentation/screens/Profile/profile_screen.dart';
 import 'package:csexplorer/service/Validator.dart';
 import 'package:csexplorer/service/authService.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +24,7 @@ class _SignupPageState extends State<SignupPage> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController comfirmPasswordController = TextEditingController();
   var role = "user";
+  bool _obscurePassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -34,12 +34,6 @@ class _SignupPageState extends State<SignupPage> {
         title: const Text("CSExplorer"),
         centerTitle: true,
         toolbarHeight: 65,
-        /* shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            bottomRight: Radius.circular(25),
-            bottomLeft: Radius.circular(25),
-          ),
-        ), */
         elevation: 1,
         titleTextStyle: const TextStyle(
             color: Color.fromRGBO(255, 255, 255, 0.9),
@@ -48,13 +42,14 @@ class _SignupPageState extends State<SignupPage> {
         backgroundColor: Colors.indigo[700],
       ),
       body: SingleChildScrollView(
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: Form(
           key: _formkey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const SizedBox(height: 30),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
                 child: Text(
@@ -63,7 +58,8 @@ class _SignupPageState extends State<SignupPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                 child: TextFormField(
                   controller: nameController,
                   decoration: const InputDecoration(labelText: "Your Name"),
@@ -71,7 +67,8 @@ class _SignupPageState extends State<SignupPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                 child: TextFormField(
                   controller: emailController,
                   decoration: const InputDecoration(labelText: "Email"),
@@ -79,27 +76,57 @@ class _SignupPageState extends State<SignupPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                 child: TextFormField(
                   controller: passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(labelText: "Password"),
+                  obscureText: _obscurePassword,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        });
+                      },
+                    ),
+                  ),
                   validator: (value) => Validator.validatePassword(value!),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                 child: TextFormField(
                   controller: comfirmPasswordController,
-                  obscureText: true,
-                  decoration:
-                      const InputDecoration(labelText: "Comfirm Password"),
+                  obscureText: _obscurePassword,
+                  decoration: InputDecoration(
+                    labelText: 'Comfirm Password',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        });
+                      },
+                    ),
+                  ),
                   validator: (value) => Validator.validateComfirmPassword(
                       value!, passwordController.text),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                 child: Center(
                   child: SizedBox(
                     height: 50,
@@ -110,11 +137,12 @@ class _SignupPageState extends State<SignupPage> {
                           String username = nameController.text;
                           String email = emailController.text;
                           String password = passwordController.text;
-        
-                          signUp(username, email, password, role);
+
+                          signUp(context, username, email, password, role);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Please fill input')));
+                              const SnackBar(
+                                  content: Text('Please fill input')));
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -133,7 +161,8 @@ class _SignupPageState extends State<SignupPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 25),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 25),
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -148,9 +177,10 @@ class _SignupPageState extends State<SignupPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const LoginPage(
-                                      title: 'Sign in',
-                                    )),
+                              builder: (context) => const LoginPage(
+                                title: 'Sign in',
+                              ),
+                            ),
                           );
                         },
                         child: const Text(
@@ -170,20 +200,48 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-  void signUp(
-      String username, String email, String password, String role) async {
+  void signUp(BuildContext context, String username, String email,
+      String password, String role) async {
     const CircularProgressIndicator();
     if (_formkey.currentState!.validate()) {
-      await _authService.signUp(username, email, password, role);
-      routeSignup();
+      String message =
+          await _authService.signUp(username, email, password, role);
+      if (message.isNotEmpty) {
+        showErrorMessage(context, message);
+      } else {
+        routeSignup();
+      }
     }
   }
 
   void routeSignup() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const ProfilePage(),
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('Create Account'),
+        content: const Text(
+            'Verification email sent. Please check your email to verify your account.'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LoginPage(
+                  title: 'Sign in',
+                ),
+              ),
+            ),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void showErrorMessage(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
       ),
     );
   }
