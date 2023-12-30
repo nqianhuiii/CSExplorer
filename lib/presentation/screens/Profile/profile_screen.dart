@@ -198,7 +198,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       title: const Text('Delete Account'),
                       trailing: IconButton(
                         icon: Icon(
-                          Icons.edit,
+                          Icons.delete,
                           size: 30,
                           color: Colors.grey.withOpacity(0.8),
                         ),

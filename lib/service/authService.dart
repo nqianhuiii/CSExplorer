@@ -35,6 +35,10 @@ class AuthService {
     try {
       User? user = _auth.currentUser;
       await user?.delete();
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .delete();
     } catch (e) {
       print("Error deleting account: $e");
     }
@@ -77,7 +81,7 @@ class AuthService {
   Future<Map<String, dynamic>?> getUserData(String uid) async {
     var userDoc =
         await FirebaseFirestore.instance.collection('users').doc(uid).get();
-    return userDoc.data() as Map<String, dynamic>?;
+    return userDoc.data();
   }
 
   Future<void> resetPassword(String email) async {
