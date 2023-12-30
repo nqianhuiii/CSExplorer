@@ -156,6 +156,39 @@ class ManageForumTopicState extends State<ManageForumTopic> {
                                               maxLines: 100,
                                             ),
                                           ),
+                                          const SizedBox(height: 5),
+                                           Row(
+                                            children: [
+                                              FutureBuilder<List<String>>(
+                                                future: ForumRepository
+                                                    .retrieveRepliesForSubject(
+                                                        forums.subject),
+                                                builder:
+                                                    (context, repliesSnapshot) {
+                                                  if (repliesSnapshot
+                                                      .hasError) {
+                                                    return Text(
+                                                        'Error: ${repliesSnapshot.error}');
+                                                  } else {
+                                                    int repliesLength =
+                                                        repliesSnapshot
+                                                                .data?.length ??
+                                                            0;
+                                                    return Row(
+                                                      children: [
+                                                        const Icon(Icons
+                                                            .comment_outlined),
+                                                        const SizedBox(
+                                                            width: 5),
+                                                        Text(
+                                                            'Discussion $repliesLength'),
+                                                      ],
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                            ],
+                                          ),
                                         ],
                                       ),
                                       const Spacer(),
@@ -167,6 +200,8 @@ class ManageForumTopicState extends State<ManageForumTopic> {
                                                     forums.subject);
                                           },
                                         ),
+                                     
+
                                     ],
                                   ),
                                 ],
