@@ -1,25 +1,26 @@
-import 'package:csexplorer/data/model/course.dart';
+import 'package:csexplorer/data/model/scholarship.dart';
 import 'package:csexplorer/data/repositories/course_repo.dart';
-import 'package:csexplorer/data/repositories/university_repo.dart';
+import 'package:csexplorer/data/repositories/scholarship_repo.dart';
 import 'package:flutter/material.dart';
-class CourseForm extends StatefulWidget {
-  const CourseForm({super.key});
-  @override
-  State<CourseForm> createState() => _UniversityFormState();
-}
-class _UniversityFormState extends State<CourseForm> {
-  final _courseController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  final _academicReqController = TextEditingController();
-  final _jobOpportunityController = TextEditingController();
 
-  final CourseRepo _courseRepository = CourseRepo();
+class ScholarshipForm extends StatefulWidget {
+  const ScholarshipForm({super.key});
+  @override
+  State<ScholarshipForm> createState() => _ScholarshipFormState();
+}
+class _ScholarshipFormState extends State<ScholarshipForm> {
+  final _providerNameController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _applicationReqController = TextEditingController();
+  final _linkController = TextEditingController();
+
+  final ScholarshipRepo _scholarshipRepository = ScholarshipRepo();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add a course"),
+        title: const Text("Add a scholarship"),
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -29,11 +30,11 @@ class _UniversityFormState extends State<CourseForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Course Name",
+                "Provider Name",
                 style: TextStyle(color: Colors.grey[600]),
               ),
               TextField(
-                controller: _courseController,
+                controller: _providerNameController,
                 decoration:
                     const InputDecoration(border: UnderlineInputBorder()),
               ),
@@ -48,27 +49,27 @@ class _UniversityFormState extends State<CourseForm> {
                   decoration: InputDecoration(
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10)),
-                      hintText: 'Description of the course')),
+                      hintText: 'Description of the scholarship')),
               const SizedBox(height: 20),
-              Text("Academic Requirements",
+              Text("Application Requirements",
                   style: TextStyle(color: Colors.grey[600])),
               const SizedBox(
                 height: 5,
               ),
               TextFormField(
-                  controller: _academicReqController,
+                  controller: _applicationReqController,
                   maxLines: 5,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10)),
-                      hintText: 'Any specific knowledge or skills requirements')),
+                      hintText: 'Any specific academic or financial requirements')),
               const SizedBox(height: 20),
               Text(
-                "Job Opportunities",
+                "Link to official or reference website",
                 style: TextStyle(color: Colors.grey[600]),
               ),
               TextField(
-                controller: _jobOpportunityController,
+                controller: _linkController,
                 decoration:
                     const InputDecoration(border: UnderlineInputBorder()),
               ),
@@ -79,14 +80,14 @@ class _UniversityFormState extends State<CourseForm> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () async {
-                      Course course = Course(
-                          name:_courseController.text,
+                      Scholarship scholarship = Scholarship(
+                          providerName: _providerNameController.text,
                           description:_descriptionController.text,
-                          academicRequirements: _academicReqController.text,
-                          jobOpportunity:_jobOpportunityController.text,
+                          applicationRequirement: _applicationReqController.text,
+                          link: _linkController.text
                           );
 
-                      _courseRepository.addCourse(course);
+                      _scholarshipRepository.addScholarship(scholarship);
                     },
                     style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
@@ -105,5 +106,3 @@ class _UniversityFormState extends State<CourseForm> {
   
   }
 }
-
-

@@ -57,7 +57,7 @@ class _EditUniversityPageState extends State<EditUniversityPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit University'),
+        title: Text('Edit University'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -71,14 +71,14 @@ class _EditUniversityPageState extends State<EditUniversityPage> {
                 decoration:
                     const InputDecoration(border: UnderlineInputBorder()),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               Text("Location", style: TextStyle(color: Colors.grey[600])),
               TextField(
                 controller: editLocationController,
                 decoration:
                     const InputDecoration(border: UnderlineInputBorder()),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               Text("Description", style: TextStyle(color: Colors.grey[600])),
               TextField(
                 controller: editDescriptionController,
@@ -86,7 +86,7 @@ class _EditUniversityPageState extends State<EditUniversityPage> {
                     border: UnderlineInputBorder(),
                     hintText: 'Short description about the university'),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               Text("Introduce the university",
                   style: TextStyle(color: Colors.grey[600])),
               TextFormField(
@@ -96,7 +96,7 @@ class _EditUniversityPageState extends State<EditUniversityPage> {
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10)),
                       hintText: 'Background of the university')),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               Text("Number of computer science courses offered",
                   style: TextStyle(color: Colors.grey[600])),
               TextFormField(

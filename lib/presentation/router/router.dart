@@ -1,5 +1,6 @@
 import 'package:csexplorer/bottom_NavBar.dart';
 import 'package:csexplorer/data/model/course.dart';
+import 'package:csexplorer/data/model/scholarship.dart';
 import 'package:csexplorer/data/model/university.dart';
 import 'package:csexplorer/main.dart';
 import 'package:csexplorer/presentation/screens/Courses/course_details.dart';
@@ -7,6 +8,7 @@ import 'package:csexplorer/presentation/screens/Courses/courses_main.dart';
 import 'package:csexplorer/presentation/screens/FAQ/manage_faq.dart';
 import 'package:csexplorer/presentation/screens/Feedback/feedback_form.dart';
 import 'package:csexplorer/presentation/screens/Profile/profile_screen.dart';
+import 'package:csexplorer/presentation/screens/Scholarships/scholarship_details.dart';
 import 'package:csexplorer/presentation/screens/Universities/university_details.dart';
 import 'package:flutter/material.dart';
 
@@ -29,6 +31,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const CourseMain());
       case '/courseDetails': 
         return MaterialPageRoute(builder: (_) => CourseDetails(courseArguments: routeSettings.arguments as Course));  
+      case '/scholarshipDetails': 
+        return MaterialPageRoute(builder: (_) => ScholarshipDetails(scholarshipArguments: routeSettings.arguments as Scholarship));  
       default:
         return null;
     }

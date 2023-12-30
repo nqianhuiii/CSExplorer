@@ -1,32 +1,37 @@
-import "package:csexplorer/customWidget/CustomAppBar.dart";
-import "package:csexplorer/data/model/university.dart";
-import "package:csexplorer/data/repositories/university_repo.dart";
-import "package:csexplorer/presentation/screens/Universities/university_details.dart";
-import "package:flutter/material.dart";
-class UniversityMain extends StatefulWidget {
-  const UniversityMain({super.key});
+import 'package:csexplorer/customWidget/CustomAppBar.dart';
+import 'package:csexplorer/data/model/scholarship.dart';
+import 'package:csexplorer/data/repositories/scholarship_repo.dart';
+import 'package:csexplorer/presentation/screens/Scholarships/scholarship_details.dart';
+import 'package:csexplorer/presentation/screens/Scholarships/scholarship_form.dart';
+import 'package:flutter/material.dart';
+
+class ScholarshipMain extends StatefulWidget {
+  const ScholarshipMain({super.key});
+
   @override
-  State<UniversityMain> createState() => _UniversityMainState();
+  State<ScholarshipMain> createState() => _ScholarshipMainState();
 }
-class _UniversityMainState extends State<UniversityMain> {
-  final UniversityRepo _universityRepo = UniversityRepo();
-  List<String> uniImage = [
-    'UTM.jpg',
-    'UM.jpg',
-    'USM.jpg',
-    'UM.jpg',
+
+class _ScholarshipMainState extends State<ScholarshipMain> {
+  final ScholarshipRepo _scholarshipRepo = ScholarshipRepo();
+  List<String> scholarshipImage = [
+    'Petronas.png',
+    'BankNegara.png',
+    'HLF.jpeg',
+    'ytm.jpeg',
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-          title: "Tertiary Institution",
-          description: "Public and Private University/College/Vocational",
-          colour: Colors.indigo.shade700),
+        title: "Scholarships",
+        description: "Scholarship that can aid your tertiary education",
+        colour: Colors.indigo.shade700,
+      ),
       backgroundColor: Colors.grey[100],
-      body: FutureBuilder<List<University>>(
-          future: _universityRepo.fetchUniList(),
+      body: FutureBuilder<List<Scholarship>>(
+          future: _scholarshipRepo.fetchScholarshipList(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
@@ -38,7 +43,7 @@ class _UniversityMainState extends State<UniversityMain> {
               );
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return const Center(
-                child: Text('No university found'),
+                child: Text('No scholarship found'),
               );
             } else {
               return ListView.separated(
@@ -49,14 +54,14 @@ class _UniversityMainState extends State<UniversityMain> {
                   height: 10,
                 ),
                 itemBuilder: (context, index) {
-                  University university = snapshot.data![index];
+                  Scholarship scholarship = snapshot.data![index];
                   return GestureDetector(
                     onTap: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => UniversityDetails(
-                                  universityArguments: university)));
+                              builder: (context) => ScholarshipDetails(
+                                  scholarshipArguments: scholarship)));
                     },
                     child: Container(
                       width: 240,
@@ -74,7 +79,7 @@ class _UniversityMainState extends State<UniversityMain> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.asset(
-                                  'assets/images/university/${uniImage[university.imageIndex]}',
+                                  'assets/images/scholarship/${scholarshipImage[scholarship.imageIndex]}',
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -90,14 +95,10 @@ class _UniversityMainState extends State<UniversityMain> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      university.name,
+                                      scholarship.providerName,
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(university.description)
                                   ]),
                             ),
                           )
@@ -108,7 +109,28 @@ class _UniversityMainState extends State<UniversityMain> {
                 },
               );
             }
-          }),
-    );
+          }),  
+      floatingActionButton: Stack(
+        children: [
+          Positioned(
+            bottom: 60,
+            right: 10,
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ScholarshipForm(),
+                  ),
+                );
+              },
+              backgroundColor: Colors.indigo.shade700,
+              elevation: 0,
+              child: const Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+            ),    
+    )]));
   }
 }
