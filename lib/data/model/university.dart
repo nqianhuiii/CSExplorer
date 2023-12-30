@@ -4,13 +4,14 @@ class University {
   late String id;
   late String name, location, description, background;
   late List<String> courseNames;
-  late int imageIndex;
+  late String image;
 
   University({
     required this.name,
     required this.location,
     required this.description,
     required this.background,
+    required this.image,
     List<String>? courseNames,
   }) : this.courseNames = courseNames ?? <String>[];
 
@@ -21,6 +22,7 @@ class University {
       'description': description,
       'background': background,
       'courseNames': courseNames,
+      'image': image,
     };
   }
 
@@ -29,7 +31,7 @@ class University {
         location = json['location'],
         description = json['description'],
         background = json['background'],
-        imageIndex = json['imageIndex'] ?? 0, // Default or handle null
+        image = json['image'],
         courseNames = List<String>.from(json['courseNames'] ?? []);
 
   University.fromSnapshot(DocumentSnapshot snapshot)
@@ -38,6 +40,6 @@ class University {
         location = snapshot['location'],
         description = snapshot['description'],
         background = snapshot['background'],
-        imageIndex = snapshot['imageIndex'] ?? 0, // Default or handle null
+        image = snapshot['image'],
         courseNames = List<String>.from(snapshot['courseNames'] ?? []);
 }

@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:csexplorer/data/model/university.dart';
 import 'package:csexplorer/data/repositories/university_repo.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 class UniversityForm extends StatefulWidget {
   const UniversityForm({super.key});
   @override
@@ -16,6 +19,21 @@ class _UniversityFormState extends State<UniversityForm> {
   Widget? _courseFields;
 
   final UniversityRepo _uniRepository = UniversityRepo();
+
+  XFile? _image;
+  String imagePathAsString = "";
+  Future<void> _getImage() async {
+    // ignore: no_leading_underscores_for_local_identifiers
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      setState(() {
+        _image = image;
+        imagePathAsString = _image?.path ?? '';
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +92,62 @@ class _UniversityFormState extends State<UniversityForm> {
                           borderRadius: BorderRadius.circular(10)),
                       hintText: 'Background of the university')),
               const SizedBox(height: 20),
+              Text("Upload image of the university",
+                style: TextStyle(color: Colors.grey[600]
+                ),
+             ),
+             const SizedBox(height: 5),
+              Container(
+                height: 100,
+                width: double.infinity, // Make the button full width
+                child: _image != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.file(
+                          File(_image!.path),
+                          fit: BoxFit.cover,
+                          width: 80,
+                          height: 80,
+                        ),
+                      )
+                    : Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: Colors.grey.shade600, 
+                          width: 1.0, 
+                        ),
+                      ),
+                      child: Material(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                          child: InkWell(
+                            onTap: _getImage,
+                            borderRadius: BorderRadius.circular(10),
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.image,
+                                    color: Colors.indigo.shade700
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    "Select Image",
+                                    style: TextStyle(
+                                      color: Colors.indigo.shade700,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                    ),
+              ),
+              const SizedBox(height: 20),           
               Text(
                 "Number of computer scince courses offered",
                 style: TextStyle(
@@ -113,9 +187,11 @@ class _UniversityFormState extends State<UniversityForm> {
                           location:_locationController.text,
                           description: _descriptionController.text,
                           background:_backgroundController.text,
-                          courseNames: courseNames);
+                          courseNames: courseNames,
+                          image: imagePathAsString);
 
                       _uniRepository.addUniversity(university);
+                      Navigator.pop(context);
                     },
                     style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
@@ -125,7 +201,8 @@ class _UniversityFormState extends State<UniversityForm> {
                     child: const Text('Submit'),
                   ),
                 ),
-              )
+              ),
+              const SizedBox(height: 70),           
             ],
           ),
         ),

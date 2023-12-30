@@ -1,4 +1,6 @@
 import "package:csexplorer/customWidget/CustomHomeContainer.dart";
+import "package:csexplorer/presentation/screens/Courses/manage_course.dart";
+import "package:csexplorer/presentation/screens/Scholarships/manage_scholarship.dart";
 import "package:csexplorer/presentation/screens/Universities/manage_university.dart";
 import 'package:csexplorer/presentation/screens/userList/user_list_screen.dart';
 import "package:csexplorer/service/authService.dart";
@@ -83,7 +85,7 @@ class _HomeState extends State<AdminHome> {
                 link: 'assets/images/main/tertiaryEducation.jpg',
                 title: "Tertiary Institution",
                 description:
-                    "View list of public and private universities, colleges, and vocational schools that provide computer science",
+                    "list of public and private universities, colleges, and vocational schools that provide computer science",
                 onTapCallback: (context) {
                   Navigator.push(
                       context,
@@ -92,18 +94,30 @@ class _HomeState extends State<AdminHome> {
                 },
               ),
               const SizedBox(height: 15),
-              const CustomHomeContainer(
+              CustomHomeContainer(
                 link: 'assets/images/main/computerScience.jpg',
                 title: "Computer Science Courses",
                 description:
-                    "View list of public and private universities, colleges, and vocational schools that provide computer science",
+                    "Type of computer science courses and its details",
+                onTapCallback: (context) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ManageCourse()));
+                },
               ),
               const SizedBox(height: 15),
-              const CustomHomeContainer(
+              CustomHomeContainer(
                 link: 'assets/images/main/scholarship.jpg',
                 title: "Scholarships",
                 description:
-                    "View list of public and private universities, colleges, and vocational schools that provide computer science",
+                    "Scholarship that can aid your tertiary studies",
+                onTapCallback: (context) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ManageScholarship()));
+                },
               ),
               const SizedBox(height: 20),
               const Text(

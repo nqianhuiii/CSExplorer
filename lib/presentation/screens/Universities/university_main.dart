@@ -1,3 +1,5 @@
+import "dart:io";
+
 import "package:csexplorer/customWidget/CustomAppBar.dart";
 import "package:csexplorer/data/model/university.dart";
 import "package:csexplorer/data/repositories/university_repo.dart";
@@ -73,10 +75,8 @@ class _UniversityMainState extends State<UniversityMain> {
                               height: 80,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
-                                child: Image.asset(
-                                  'assets/images/university/${uniImage[university.imageIndex]}',
-                                  fit: BoxFit.cover,
-                                ),
+                                child: _buildImageWidget(
+                                    university.image)
                               ),
                             ),
                           ),
@@ -112,3 +112,33 @@ class _UniversityMainState extends State<UniversityMain> {
     );
   }
 }
+
+  Widget _buildImageWidget(String imagePath) {
+    // ignore: unnecessary_null_comparison
+    if (imagePath == null || imagePath.isEmpty) {
+      return Container();
+    }
+
+    if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
+      return Image.network(
+        imagePath,
+        height: 150,
+        width: 150,
+        fit: BoxFit.cover,
+      );
+    } else if (imagePath.startsWith('assets/')) {
+      return Image.asset(
+        imagePath,
+        height: 150,
+        width: 150,
+        fit: BoxFit.cover,
+      );
+    } else {
+      return Image.file(
+        File(imagePath),
+        height: 150,
+        width: 150,
+        fit: BoxFit.cover,
+      );
+    }
+  }

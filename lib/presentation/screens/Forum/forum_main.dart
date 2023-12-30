@@ -27,9 +27,9 @@ class _ForumMainState extends State<ForumMain> {
                     MaterialPageRoute(
                         builder: (context) => const ForumTopicForm()));
               },
-              backgroundColor: Colors.blue,
+              backgroundColor: Colors.indigo.shade700,
               elevation: 0,
-              child: const Icon(Icons.add),
+              child: const Icon(Icons.add, color: Colors.white,),
             ),
           ),
         ],
