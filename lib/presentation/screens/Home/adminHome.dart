@@ -1,6 +1,6 @@
 import "package:csexplorer/customWidget/CustomHomeContainer.dart";
 import "package:csexplorer/presentation/screens/Universities/manage_university.dart";
-import "package:csexplorer/presentation/screens/userList/userList.dart";
+import 'package:csexplorer/presentation/screens/userList/user_list_screen.dart';
 import "package:csexplorer/service/authService.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
@@ -120,7 +120,7 @@ class _HomeState extends State<AdminHome> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const userListPage()));
+                          builder: (context) => const userListScreen()));
                 },
               ),
             ],
