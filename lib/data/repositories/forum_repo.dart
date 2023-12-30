@@ -2,7 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csexplorer/data/model/forum.dart';
 import 'package:flutter/foundation.dart';
 
-class ForumRepository {
+import '../model/reply.dart';
+
+class ForumRepository
+{
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> addForumTopic(Forum forum) async {
@@ -465,7 +468,7 @@ static Future<String> getIdForReply(String subject, String name) async {
             return data['likes'] as int;
           }
         } else {
-
+     
           // ignore: avoid_print
           print('Reply not found: $replyId');
         }

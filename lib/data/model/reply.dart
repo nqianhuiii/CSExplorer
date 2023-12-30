@@ -22,7 +22,7 @@ class Reply {
         likes = json['likes'] ?? 0,
         name = json['name'] ?? '',
         id = json['id'] ?? '';
-
+  
 
 
 }

@@ -1,5 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
-import 'package:csexplorer/data/repositories/reply_repo.dart';
+import 'dart:io';
+import 'dart:math';
+import 'package:csexplorer/data/model/reply.dart';
+import 'package:csexplorer/data/repositories/forum_repo.dart';
+import 'package:csexplorer/service/authService.dart';
 import 'package:flutter/material.dart';
 import 'package:csexplorer/data/model/forum.dart' as Forum;
 
@@ -14,22 +20,39 @@ class ForumDiscussion extends StatefulWidget {
 }
 
 class _ForumDiscussionState extends State<ForumDiscussion> {
-  final ReplyRepository _commentRepository = ReplyRepository();
+  final ForumRepository _forumRepository = ForumRepository();
   // ignore: unused_field
   late Timer _refreshTimer;
   final int refreshIntervalInMilliseconds = 1000;
-  late Future<List<String>> _replyList = ReplyRepository.retrieveReplies();
+  late Future<List<String>> _replyList =
+      ForumRepository.retrieveRepliesForSubject(widget.forum.subject);
   List<String> updatedList = [];
   List<int> likesCounts = [];
+  List<String> replyList = [];
+  int updatedLikes = 0;
+  int likesCount = 0;
+  String replyID = "";
+  late Future<List<String>> allReplyIds =
+      ForumRepository.getAllReplyIdsForSubject(widget.forum.subject);
+  String userId = AuthService.getCurrentUserId();
+  String name = "";
+  List<String> nameList = [];
+  List<String> author = [];
 
   @override
   void initState() {
     super.initState();
     _startRefreshTimer();
+    fetchData();
+    initializeName();
+    retrieveName();
+    retrieveList();
+    retrieveId();
   }
 
-  Future<void> handleLikesUpdate(String comment, int index) async {
-    int updatedLikes = await _commentRepository.getLikes(comment);
+  Future<void> handleLikesUpdate(String replyId, int index) async {
+    updatedLikes = await _forumRepository.retrieveLikesForReply(
+        widget.forum.subject, replyId);
 
     setState(() {
       if (index >= likesCounts.length) {
@@ -40,67 +63,184 @@ class _ForumDiscussionState extends State<ForumDiscussion> {
     });
   }
 
+  Future<void> initializeName() async {
+    name = await AuthService.getUserNameById(userId);
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  Future<void> retrieveName() async {
+    nameList =
+        await ForumRepository.retrieveNamesForSubject(widget.forum.subject);
+    if (mounted) {
+      setState((
+       
+      ) {
+        
+      });
+    }
+  }
+
+  Future<void> retrieveId() async {
+    author = await ForumRepository.retrieveIdsForSubject(widget.forum.subject);
+    if (mounted) {
+      setState(() {
+       
+      });
+    }
+  }
+
+  Future<void> retrieveList() async
+  {
+    updatedList =
+        await ForumRepository.retrieveRepliesForSubject(widget.forum.subject);
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   void _startRefreshTimer() {
     _refreshTimer = Timer.periodic(
       Duration(milliseconds: refreshIntervalInMilliseconds),
-      (timer) async {
+      (timer) {
         try {
-          updatedList = await ReplyRepository.retrieveReplies();
-          setState(() {
-            _replyList = Future.value(updatedList);
+          // Retrieve the data in parallel using Future.wait
+          Future.wait([
+            retrieveList(),
+            retrieveName(),
+            retrieveId(),
+          ]).then((_) {
+            // Fetch additional data and update UI
+            fetchData();
+            setState(() {
+              _replyList = Future.value(updatedList);
+            });
+            fetchData();
+          }).catchError((error) {
+            // Handle errors appropriately
+            print('Error fetching data: $error');
           });
         } catch (error) {
-          // ignore: avoid_print
-          print('Error fetching data: $error');
+          // Handle errors appropriately
+          print('Error: $error');
         }
       },
     );
+  }
+  void fetchData() async {
+    replyList =
+        await ForumRepository.getAllReplyIdsForSubject(widget.forum.subject);
+
+    likesCounts = List<int>.filled(replyList.length, 0);
+
+    for (int i = 0; i < replyList.length; i++) {
+      await handleLikesUpdate(replyList[i], i);
+    }
+  }
+
+  Widget _buildImageWidget(String imagePath) {
+    // ignore: unnecessary_null_comparison
+    if (imagePath == null || imagePath.isEmpty) {
+      return Container();
+    }
+
+    if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
+      return Image.network(
+        imagePath,
+        height: 150,
+        width: 150,
+        fit: BoxFit.cover,
+      );
+    } else if (imagePath.startsWith('assets/')) {
+      return Image.asset(
+        imagePath,
+        height: 150,
+        width: 150,
+        fit: BoxFit.cover,
+      );
+    } else {
+      return Image.file(
+        File(imagePath),
+        height: 150,
+        width: 150,
+        fit: BoxFit.cover,
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     double cardWidth = MediaQuery.of(context).size.width * 0.9;
 
-    void showReplyBottomSheet() {
+    void showReplyDialog() {
       TextEditingController replyController = TextEditingController();
 
-      showModalBottomSheet(
+      showDialog(
         context: context,
         builder: (BuildContext context) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: replyController,
-                      decoration: const InputDecoration(
-                        hintText: 'Type your reply here...',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  ElevatedButton(
-                    onPressed: () async {
-                      String replyText = replyController.text;
-
-                      await _commentRepository.addReply(replyText);
-
-                      // ignore: use_build_context_synchronously
-                      Navigator.pop(context);
-                    },
-                    child: const Icon(Icons.send),
-                  ),
-                ],
+          return AlertDialog(
+            // ignore: prefer_const_constructors
+            title: Text('Type your reply'),
+            content: TextField(
+              controller: replyController,
+              decoration: const InputDecoration(
+                hintText: 'Type your reply here...',
               ),
-              const SizedBox(height: 50),
+            ),
+            actions: [
+              ElevatedButton(
+                onPressed: () async {
+                  String replyText = replyController.text;
+                  String subject = widget.forum.subject;
+
+                  String replyId = await ForumRepository.addReplyToSubject(
+                      subject, replyText, name, userId);
+
+                  replyList.add(replyId);
+
+                  nameList.add(name);
+
+                  Navigator.pop(context);
+                },
+                child: const Text('Send'),
+              ),
             ],
           );
         },
       );
+    }
+
+    Future<String> showEditDialog() async {
+      TextEditingController replyController = TextEditingController();
+      Completer<String> completer = Completer<String>();
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Edit your reply'),
+            content: TextField(
+              controller: replyController,
+              decoration: const InputDecoration(
+                hintText: 'Type your reply here...',
+              ),
+            ),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  String replyText = replyController.text;
+                  Navigator.pop(context);
+                  completer.complete(replyText);
+                },
+                child: const Text('Edit'),
+              ),
+            ],
+          );
+        },
+      );
+
+      return completer.future;
     }
 
     return Scaffold(
@@ -111,6 +251,7 @@ class _ForumDiscussionState extends State<ForumDiscussion> {
           future: _replyList,
           builder: (context, snapshot) {
             if (snapshot.hasData && snapshot.data != null) {
+              List<String> replies = snapshot.data!;
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -140,19 +281,38 @@ class _ForumDiscussionState extends State<ForumDiscussion> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text('name'),
-                                    Text(
-                                      widget.forum.subject,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
+                                    Text(widget.forum.name),
+                                    SizedBox(
+                                      width: 200,
+                                      child: Text(
+                                        widget.forum.subject,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 100,
                                       ),
                                     ),
-                                    Text(widget.forum.message),
+                                    const SizedBox(height: 5),
+                                    SizedBox(
+                                      width: 200,
+                                      child: Text(
+                                        widget.forum.message,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 100,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    // ignore: unnecessary_null_comparison
+                                    if (widget.forum.image != null)
+                                      _buildImageWidget(widget.forum.image)
+                                    else
+                                      Container(),
                                   ],
                                 ),
                                 const Spacer(),
                               ],
-                            ),
+                            )
                           ],
                         ),
                       ),
@@ -171,82 +331,139 @@ class _ForumDiscussionState extends State<ForumDiscussion> {
                   ),
                   Expanded(
                     child: ListView.builder(
-                      itemCount: snapshot.data!.length,
+                      itemCount: min(replyList.length, replies.length),
                       itemBuilder: (context, index) {
-                        String comment = snapshot.data![index];
-                        return Card(
-                          elevation: 5,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          child: Container(
-                            width: cardWidth,
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const CircleAvatar(
-                                      radius: 15,
-                                      backgroundImage: AssetImage(
-                                        'assets/images/defaultProfilePic.jpg',
+                        if (index < nameList.length &&
+                            index < replyList.length &&
+                            index < replies.length &&
+                            index < author.length) {
+                          String name = nameList[index];
+                          String comment = replies[index];
+                          String replyId = replyList[index];
+                          String userId = AuthService.getCurrentUserId();
+                          String authorId = author[index];
+
+                          bool isAuthor = userId == authorId;
+
+                          return Card(
+                            elevation: 5,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            child: Container(
+                              width: cardWidth,
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const CircleAvatar(
+                                        radius: 15,
+                                        backgroundImage: AssetImage(
+                                          'assets/images/defaultProfilePic.jpg',
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Text('name'),
-                                        Text(comment),
-                                      ],
-                                    ),
-                                    const Spacer(),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                Row(
-                                  children: [
-                                    const SizedBox(width: 35),
-                                    InkWell(
-                                      onTap: () async {
-                                        if (mounted) {
-                                          await _commentRepository
-                                              .incrementLikes(comment);
-                                          handleLikesUpdate(comment, index);
-                                        }
-                                      },
-                                      child: Row(
+                                      const SizedBox(width: 10),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          const Icon(
-                                              Icons.favorite_border_outlined),
-                                          const SizedBox(width: 3),
-                                          FutureBuilder<int>(
-                                            future: _commentRepository
-                                                .getLikes(comment),
-                                            builder: (context, likesSnapshot) {
-                                              if (likesSnapshot.hasError) {
-                                                return Text(
-                                                    'Error: ${likesSnapshot.error}');
-                                              } else {
-                                                int likesCount =
-                                                    likesSnapshot.data ?? 0;
-                                                return Text(
-                                                    'Likes $likesCount');
-                                              }
-                                            },
+                                          Text(name),
+                                          //Text("name,$author"),
+                                          const SizedBox(height: 5),
+                                          SizedBox(
+                                            width: 200,
+                                            child: Text(
+                                              comment,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 100,
+                                            ),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                      const Spacer(),
+                                      if (isAuthor)
+                                        IconButton(
+                                          icon: const Icon(Icons.edit),
+                                          onPressed: () async {
+                                            String updatedReply =
+                                                // ignore: await_only_futures
+                                                await showEditDialog();
+                                            // ignore: unnecessary_null_comparison
+                                            if (updatedReply != null) {
+                                              await ForumRepository.editReply(
+                                                  widget.forum.subject,
+                                                  replyId,
+                                                  updatedReply);
+                                            }
+                                          },
+                                        ),
+                                      if (isAuthor)
+                                        IconButton(
+                                          icon: const Icon(Icons.delete),
+                                          onPressed: () async {
+                                            await ForumRepository.deleteReply(
+                                                widget.forum.subject, replyId);
+                                          },
+                                        ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Row(
+                                    children: [
+                                      const SizedBox(width: 35),
+                                      InkWell(
+                                        onTap: () async {
+                                          if (mounted) {
+                                            await ForumRepository
+                                                .incrementLikesForReply(
+                                                    widget.forum.subject,
+                                                    replyId);
+                                            handleLikesUpdate(replyId, index);
+                                          }
+                                        },
+                                        child: Row(
+                                          children: [
+                                            const Icon(
+                                                Icons.favorite_border_outlined),
+                                            const SizedBox(width: 3),
+                                            FutureBuilder<int>(
+                                              future: _forumRepository
+                                                  .retrieveLikesForReply(
+                                                      widget.forum.subject,
+                                                      replyId),
+                                              builder:
+                                                  (context, likesSnapshot) {
+                                                if (likesSnapshot.hasError) {
+                                                  return Text(
+                                                      'Error: ${likesSnapshot.error}');
+                                                } else {
+                                                  int likesCount =
+                                                      likesSnapshot.data ?? 0;
+                                                  return Text(
+                                                    'Likes $likesCount',
+                                                  );
+                                                }
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        } else {
+                          return Container();
+                        }
                       },
                     ),
                   ),
@@ -262,7 +479,7 @@ class _ForumDiscussionState extends State<ForumDiscussion> {
             bottom: 60,
             right: 10,
             child: FloatingActionButton(
-              onPressed: showReplyBottomSheet,
+              onPressed: showReplyDialog,
               tooltip: 'Reply',
               child: const Icon(Icons.comment),
             ),
