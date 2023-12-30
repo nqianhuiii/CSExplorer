@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:csexplorer/data/model/scholarship.dart';
 import 'package:csexplorer/data/repositories/scholarship_repo.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ScholarshipForm extends StatefulWidget {
   const ScholarshipForm({super.key});
@@ -14,6 +17,21 @@ class _ScholarshipFormState extends State<ScholarshipForm> {
   final _linkController = TextEditingController();
 
   final ScholarshipRepo _scholarshipRepository = ScholarshipRepo();
+
+  XFile? _image;
+  String imagePathAsString = "";
+  Future<void> _getImage() async {
+    // ignore: no_leading_underscores_for_local_identifiers
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      setState(() {
+        _image = image;
+        imagePathAsString = _image?.path ?? '';
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +90,62 @@ class _ScholarshipFormState extends State<ScholarshipForm> {
                 decoration:
                     const InputDecoration(border: UnderlineInputBorder()),
               ),
+            const SizedBox(height: 20),
+            Text("Upload image of the university",
+                style: TextStyle(color: Colors.grey[600]
+                ),
+             ),
+             const SizedBox(height: 5),
+              Container(
+                height: 100,
+                width: double.infinity, // Make the button full width
+                child: _image != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.file(
+                          File(_image!.path),
+                          fit: BoxFit.cover,
+                          width: 80,
+                          height: 80,
+                        ),
+                      )
+                    : Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: Colors.grey.shade600, 
+                          width: 1.0, 
+                        ),
+                      ),
+                      child: Material(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                          child: InkWell(
+                            onTap: _getImage,
+                            borderRadius: BorderRadius.circular(10),
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.image,
+                                    color: Colors.indigo.shade700
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    "Select Image",
+                                    style: TextStyle(
+                                      color: Colors.indigo.shade700,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                    ),
+              ),              
               const SizedBox(height: 50),
               Center(
                 child: SizedBox(
@@ -83,10 +157,12 @@ class _ScholarshipFormState extends State<ScholarshipForm> {
                           providerName: _providerNameController.text,
                           description:_descriptionController.text,
                           applicationRequirement: _applicationReqController.text,
-                          link: _linkController.text
+                          link: _linkController.text, 
+                          image: imagePathAsString,
                           );
 
                       _scholarshipRepository.addScholarship(scholarship);
+                      Navigator.pop(context);
                     },
                     style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
@@ -96,7 +172,8 @@ class _ScholarshipFormState extends State<ScholarshipForm> {
                     child: const Text('Submit'),
                   ),
                 ),
-              )
+              ),
+              const SizedBox(height: 50),
             ],
           ),
         ),

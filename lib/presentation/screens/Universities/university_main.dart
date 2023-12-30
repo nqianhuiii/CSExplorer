@@ -12,12 +12,6 @@ class UniversityMain extends StatefulWidget {
 }
 class _UniversityMainState extends State<UniversityMain> {
   final UniversityRepo _universityRepo = UniversityRepo();
-  List<String> uniImage = [
-    'UTM.jpg',
-    'UM.jpg',
-    'USM.jpg',
-    'UM.jpg',
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +107,7 @@ class _UniversityMainState extends State<UniversityMain> {
   }
 }
 
-  Widget _buildImageWidget(String imagePath) {
+Widget _buildImageWidget(String imagePath) {
     // ignore: unnecessary_null_comparison
     if (imagePath == null || imagePath.isEmpty) {
       return Container();

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:csexplorer/data/model/scholarship.dart';
 import 'package:flutter/material.dart';
 class ScholarshipDetails extends StatefulWidget {
@@ -8,13 +10,6 @@ class ScholarshipDetails extends StatefulWidget {
   State<ScholarshipDetails> createState() => _ScholarshipDetailsState();
 }
 class _ScholarshipDetailsState extends State<ScholarshipDetails> {
-  List<String> scholarshipImage = [
-    'Petronas.png',
-    'BankNegara.png',
-    'HLF.jpeg',
-    'ytm.jpeg',
-  ];
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -28,10 +23,7 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     height: 250,
-                    child: Image.asset(
-                      'assets/images/scholarship/${scholarshipImage[widget.scholarshipArguments.imageIndex]}',
-                      fit: BoxFit.cover,
-                    ),
+                    child: _buildImageWidget(widget.scholarshipArguments.image)
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -89,3 +81,33 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
     );
   }
 }
+
+Widget _buildImageWidget(String imagePath) {
+    // ignore: unnecessary_null_comparison
+    if (imagePath == null || imagePath.isEmpty) {
+      return Container();
+    }
+
+    if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
+      return Image.network(
+        imagePath,
+        height: 150,
+        width: 150,
+        fit: BoxFit.cover,
+      );
+    } else if (imagePath.startsWith('assets/')) {
+      return Image.asset(
+        imagePath,
+        height: 150,
+        width: 150,
+        fit: BoxFit.cover,
+      );
+    } else {
+      return Image.file(
+        File(imagePath),
+        height: 150,
+        width: 150,
+        fit: BoxFit.cover,
+      );
+    }
+  }

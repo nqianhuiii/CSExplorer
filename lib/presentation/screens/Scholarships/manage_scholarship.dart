@@ -1,8 +1,11 @@
+import "dart:io";
+
 import "package:csexplorer/customWidget/CustomAppBar.dart";
 import "package:csexplorer/data/model/scholarship.dart";
 import "package:csexplorer/data/repositories/scholarship_repo.dart";
 import "package:csexplorer/presentation/screens/Scholarships/edit_scholarship.dart";
 import "package:csexplorer/presentation/screens/Scholarships/scholarship_details.dart";
+import "package:csexplorer/presentation/screens/Scholarships/scholarship_form.dart";
 import "package:csexplorer/presentation/screens/Universities/university_form.dart";
 import "package:flutter/material.dart";
 
@@ -103,12 +106,6 @@ class _ManageScholarshipState extends State<ManageScholarship> {
       _loadScholarship();
     });
   }
-  List<String> scholarshipImage = [
-    'Petronas.png',
-    'BankNegara.png',
-    'HLF.jpeg',
-    'ytm.jpeg',
-  ];
 
 @override
 Widget build(BuildContext context) {
@@ -149,10 +146,7 @@ Widget build(BuildContext context) {
                               height: 80,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
-                                child: Image.asset(
-                                  'assets/images/scholarship/${scholarshipImage[scholarship.imageIndex]}',
-                                  fit: BoxFit.cover,
-                                ),
+                                child:_buildImageWidget(scholarship.image)
                               ),
                             ),
                           ),
@@ -228,7 +222,7 @@ Widget build(BuildContext context) {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const UniversityForm()));
+                      builder: (context) => const ScholarshipForm()));
             },
             backgroundColor: Colors.indigo[700],
             elevation: 0,
@@ -243,3 +237,33 @@ Widget build(BuildContext context) {
   );
 }
 }
+
+Widget _buildImageWidget(String imagePath) {
+    // ignore: unnecessary_null_comparison
+    if (imagePath == null || imagePath.isEmpty) {
+      return Container();
+    }
+
+    if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
+      return Image.network(
+        imagePath,
+        height: 150,
+        width: 150,
+        fit: BoxFit.cover,
+      );
+    } else if (imagePath.startsWith('assets/')) {
+      return Image.asset(
+        imagePath,
+        height: 150,
+        width: 150,
+        fit: BoxFit.cover,
+      );
+    } else {
+      return Image.file(
+        File(imagePath),
+        height: 150,
+        width: 150,
+        fit: BoxFit.cover,
+      );
+    }
+  }

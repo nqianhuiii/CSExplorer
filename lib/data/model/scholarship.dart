@@ -6,7 +6,8 @@ class Scholarship {
   late String applicationRequirement;
   late String id;
   late String link;
-  late int imageIndex;
+  late String image;
+
 
 
   Scholarship({
@@ -14,6 +15,7 @@ class Scholarship {
     required this.description,
     required this.applicationRequirement,
     required this.link,
+    required this.image,
   });
 
   Map<String, dynamic> toJson() {
@@ -22,6 +24,7 @@ class Scholarship {
       'description': description,
       'applicationRequirement': applicationRequirement,
       'link': link,
+      'image': image,
     };
   }
 
@@ -30,7 +33,8 @@ class Scholarship {
         description = json['description'],
         applicationRequirement= json['applicationRequirement'],
         link = json['link'],
-        imageIndex = json['imageIndex'] ?? 0; 
+        image = json['image']; 
+        
         
 
   Scholarship.fromSnapshot(DocumentSnapshot snapshot)
@@ -39,5 +43,5 @@ class Scholarship {
         description = snapshot['description'],
         applicationRequirement = snapshot['applicationRequirement'],
         link = snapshot['link'],
-        imageIndex = snapshot['imageIndex'] ?? 0;
+        image= snapshot['image'];
 }

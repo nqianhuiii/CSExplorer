@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:csexplorer/customWidget/CustomAppBar.dart';
 import 'package:csexplorer/data/model/scholarship.dart';
 import 'package:csexplorer/data/repositories/scholarship_repo.dart';
@@ -13,12 +15,6 @@ class ScholarshipMain extends StatefulWidget {
 
 class _ScholarshipMainState extends State<ScholarshipMain> {
   final ScholarshipRepo _scholarshipRepo = ScholarshipRepo();
-  List<String> scholarshipImage = [
-    'Petronas.png',
-    'BankNegara.png',
-    'HLF.jpeg',
-    'ytm.jpeg',
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -77,10 +73,7 @@ class _ScholarshipMainState extends State<ScholarshipMain> {
                               height: 80,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
-                                child: Image.asset(
-                                  'assets/images/scholarship/${scholarshipImage[scholarship.imageIndex]}',
-                                  fit: BoxFit.cover,
-                                ),
+                                child: _buildImageWidget(scholarship.image)
                               ),
                             ),
                           ),
@@ -111,3 +104,33 @@ class _ScholarshipMainState extends State<ScholarshipMain> {
           }),  );
   }
 }
+
+  Widget _buildImageWidget(String imagePath) {
+    // ignore: unnecessary_null_comparison
+    if (imagePath == null || imagePath.isEmpty) {
+      return Container();
+    }
+
+    if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
+      return Image.network(
+        imagePath,
+        height: 150,
+        width: 150,
+        fit: BoxFit.cover,
+      );
+    } else if (imagePath.startsWith('assets/')) {
+      return Image.asset(
+        imagePath,
+        height: 150,
+        width: 150,
+        fit: BoxFit.cover,
+      );
+    } else {
+      return Image.file(
+        File(imagePath),
+        height: 150,
+        width: 150,
+        fit: BoxFit.cover,
+      );
+    }
+  }

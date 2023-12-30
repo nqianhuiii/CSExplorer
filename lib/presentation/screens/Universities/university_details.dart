@@ -10,12 +10,6 @@ class UniversityDetails extends StatefulWidget {
   State<UniversityDetails> createState() => _UniversityDetailsState();
 }
 class _UniversityDetailsState extends State<UniversityDetails> {
-  List<String> uniImage = [
-    'UTM.jpg',
-    'UM.jpg',
-    'USM.jpg',
-    'UM.jpg',
-  ];
 
   @override
   Widget build(BuildContext context) {
