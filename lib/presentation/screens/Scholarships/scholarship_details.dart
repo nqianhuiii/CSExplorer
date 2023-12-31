@@ -1,16 +1,25 @@
 import 'dart:io';
 
-import 'package:csexplorer/data/model/university.dart';
+import 'package:csexplorer/data/model/scholarship.dart';
 import 'package:flutter/material.dart';
-class UniversityDetails extends StatefulWidget {
-  final University universityArguments;
-  const UniversityDetails({Key? key, required this.universityArguments})
+import 'package:url_launcher/url_launcher.dart';
+
+class ScholarshipDetails extends StatefulWidget {
+  final Scholarship scholarshipArguments;
+  const ScholarshipDetails({Key? key, required this.scholarshipArguments})
       : super(key: key);
   @override
-  State<UniversityDetails> createState() => _UniversityDetailsState();
+  State<ScholarshipDetails> createState() => _ScholarshipDetailsState();
 }
-class _UniversityDetailsState extends State<UniversityDetails> {
-
+class _ScholarshipDetailsState extends State<ScholarshipDetails> {
+ 
+  void _launchURL(String url) async {
+    final uri = Uri.parse(url);
+    if (!await launchUrl(uri)) {
+      throw Exception('Could not launch url');
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -24,7 +33,7 @@ class _UniversityDetailsState extends State<UniversityDetails> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     height: 250,
-                    child: _buildImageWidget(widget.universityArguments.image),
+                    child: _buildImageWidget(widget.scholarshipArguments.image)
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -35,42 +44,44 @@ class _UniversityDetailsState extends State<UniversityDetails> {
                             height: 10,
                           ),
                           Text(
-                            widget.universityArguments.name,
+                            widget.scholarshipArguments.providerName,
                             style: const TextStyle(
                                 fontSize: 17, fontWeight: FontWeight.bold),
                           ),
-                          Text(
-                            widget.universityArguments.location,
-                            style: TextStyle(color: Colors.grey[600]),
-                          ),
                           const SizedBox(height: 30),
                           const Text(
-                            'Background',
+                            'Description',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          Text(widget.universityArguments.background),
+                          Text(widget.scholarshipArguments.description),
                           const SizedBox(height: 30),
                           const Text(
-                            'Computer Science Course Offered',
+                            'Application Requirements',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: widget.universityArguments.courseNames
-                                  .map((courseName) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Colors.indigo.shade700),
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(8))),
-                                    padding: const EdgeInsets.all(10),
-                                    child: Text(courseName),
+                          Text(widget.scholarshipArguments.applicationRequirement),
+                          const SizedBox(height: 30),
+                          const Text(
+                            'Link to Official or Reference Website',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              _launchURL(widget.scholarshipArguments.link);
+                            },
+                            child: Row(
+                              children: [
+                                const Icon(Icons.link, color: Colors.black,),
+                                const SizedBox(width: 10,),
+                                Text(
+                                  widget.scholarshipArguments.link,
+                                  style: const TextStyle(
+                                    color: Colors.black, // Make the link appear in a different color
                                   ),
-                                );
-                              }).toList()),
+                                ),
+                              ],
+                            ),
+                          ),                          
                           const SizedBox(height: 70),
                         ]),
                   ),
@@ -126,3 +137,4 @@ Widget _buildImageWidget(String imagePath) {
       );
     }
   }
+

@@ -1,15 +1,22 @@
 import 'dart:io';
 
-import 'package:csexplorer/data/model/university.dart';
+import 'package:csexplorer/data/model/course.dart';
 import 'package:flutter/material.dart';
-class UniversityDetails extends StatefulWidget {
-  final University universityArguments;
-  const UniversityDetails({Key? key, required this.universityArguments})
+
+class CourseDetails extends StatefulWidget {
+  final Course courseArguments;
+  const CourseDetails({Key? key, required this.courseArguments})
       : super(key: key);
   @override
-  State<UniversityDetails> createState() => _UniversityDetailsState();
+  State<CourseDetails> createState() => _CourseDetailsState();
 }
-class _UniversityDetailsState extends State<UniversityDetails> {
+class _CourseDetailsState extends State<CourseDetails> {
+  List<String> courseImage = [
+    'Graphic.jpg',
+    'Cyber.jpg',
+    'DE.png',
+    'SE.jpeg',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +31,7 @@ class _UniversityDetailsState extends State<UniversityDetails> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     height: 250,
-                    child: _buildImageWidget(widget.universityArguments.image),
+                    child:_buildImageWidget(widget.courseArguments.image)
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -35,42 +42,28 @@ class _UniversityDetailsState extends State<UniversityDetails> {
                             height: 10,
                           ),
                           Text(
-                            widget.universityArguments.name,
+                            widget.courseArguments.name,
                             style: const TextStyle(
                                 fontSize: 17, fontWeight: FontWeight.bold),
                           ),
-                          Text(
-                            widget.universityArguments.location,
-                            style: TextStyle(color: Colors.grey[600]),
-                          ),
                           const SizedBox(height: 30),
                           const Text(
-                            'Background',
+                            'Description',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          Text(widget.universityArguments.background),
+                          Text(widget.courseArguments.description),
                           const SizedBox(height: 30),
                           const Text(
-                            'Computer Science Course Offered',
+                            'Academic Requirements',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: widget.universityArguments.courseNames
-                                  .map((courseName) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Colors.indigo.shade700),
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(8))),
-                                    padding: const EdgeInsets.all(10),
-                                    child: Text(courseName),
-                                  ),
-                                );
-                              }).toList()),
+                          Text(widget.courseArguments.academicRequirements),
+                          const SizedBox(height: 30),
+                          const Text(
+                            'Job Opportunities',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text(widget.courseArguments.jobOpportunity),
                           const SizedBox(height: 70),
                         ]),
                   ),
@@ -85,7 +78,7 @@ class _UniversityDetailsState extends State<UniversityDetails> {
                   },
                   icon: const Icon(
                     Icons.arrow_back,
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
                 ),
               ),

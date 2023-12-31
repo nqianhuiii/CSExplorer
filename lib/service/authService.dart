@@ -91,4 +91,14 @@ class AuthService {
       print('Unseccessful password update');
     }
   }
+
+  static String getCurrentUserId() {
+    return FirebaseAuth.instance.currentUser!.uid;
+  }
+
+  static Future<String> getUserNameById(String id) async {
+    var userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(id).get();
+    return userDoc.data()!['username'];
+  }
 }

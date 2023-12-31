@@ -118,7 +118,7 @@ class _ForumTopicFormState extends State<ForumTopicForm> {
                     },
                     style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
-                        backgroundColor: Colors.blue[400],
+                        backgroundColor: Colors.indigo.shade700,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12))),
                     child: const Text('Submit'),

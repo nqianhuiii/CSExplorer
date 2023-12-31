@@ -4,11 +4,13 @@ import "package:flutter/material.dart";
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final String description;
+  final Color colour;
 
   const CustomAppBar({
     Key? key,
     required this.title,
     required this.description,
+    required this.colour,
   }) : super(key: key);
 
   @override
@@ -34,7 +36,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ],
         ),
-        backgroundColor: Colors.indigo[700],
+        backgroundColor: colour,
         toolbarHeight: 130,
         shape: const ContinuousRectangleBorder(
             borderRadius:

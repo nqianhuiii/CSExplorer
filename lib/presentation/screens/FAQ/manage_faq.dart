@@ -77,48 +77,63 @@ class _ManageFAQState extends State<ManageFAQ> {
       },
     );
   }
+Future<void> _saveChanges() async {
+  String question = questionController.text.trim();
+  String answer = answerController.text.trim();
 
-  Future<void> _saveChanges() async {
-    String question = questionController.text;
-    String answer = answerController.text;
+  if (question.isNotEmpty && answer.isNotEmpty) {
+    Faq newFAQ = Faq(
+      question: question,
+      answer: answer,
+    );
 
-    if (question.isNotEmpty && answer.isNotEmpty) {
-      Faq newFAQ = Faq(
-        question: question,
-        answer: answer,
+    String? faqId = await _faqRepository.addFaq(newFAQ);
+
+    if (faqId != null) {
+      _loadFaqs(); 
+      questionController.clear();
+      answerController.clear();
+    } else {
+      // ignore: use_build_context_synchronously
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: const Text('Cannot Add the FAQ'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); 
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
       );
-
-      String? faqId = await _faqRepository.addFaq(newFAQ);
-
-      if (faqId != null) {
-        _loadFaqs(); 
-        questionController.clear();
-        answerController.clear();
-      } else {
-        // ignore: use_build_context_synchronously
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Error'),
-              content: const Text('Cannot Add the FAQ'),
-              actions: [
-                TextButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.indigo[700], 
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop(); 
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-      }
     }
+  } else {
+    // Show an error dialog if either the question or answer is empty
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Validation Error'),
+          content: const Text('Both Question and Answer are required fields.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the error dialog
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
+}
 
   void _editFAQ(BuildContext context, int index) async {
     Faq selectedFAQ = faqList[index];
@@ -212,31 +227,68 @@ class _ManageFAQState extends State<ManageFAQ> {
   }
 
   void _deleteFAQ(int index) async {
-    BuildContext dialogContext = context;
-    bool success = await _faqRepository.deleteFaq(faqList[index].id);
-    if (success) {
-      _loadFaqs(); 
-    } else {
-      // ignore: use_build_context_synchronously
-      showDialog(
-        context: dialogContext,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: const Text('Cannot Delete the FAQ'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(dialogContext).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    }
+showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Deletion'),
+          content: const Text('Are you sure you want to delete this faq?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+               style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.indigo[700],
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                 bool success = await _faqRepository.deleteFaq(faqList[index].id);
+                if (success) {
+                  _loadFaqs();
+                } else {
+                  // ignore: use_build_context_synchronously
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Error'),
+                        content: const Text('Cannot Delete the Faq'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
+                Navigator.of(context).pop(); // Close the confirmation dialog
+              },
+               style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.indigo[700],
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
   }
+
+
 
   @override
   Widget build(BuildContext context) {

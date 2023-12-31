@@ -1,6 +1,6 @@
-import 'package:csexplorer/presentation/screens/Profile/change_password.dart';
 import 'package:csexplorer/presentation/screens/Authentication/login.dart';
 import 'package:csexplorer/presentation/screens/MBTI/mbti.dart';
+import 'package:csexplorer/presentation/screens/Profile/change_password.dart';
 import 'package:csexplorer/service/authService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';

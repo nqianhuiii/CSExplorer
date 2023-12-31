@@ -1,44 +1,44 @@
 import "dart:io";
 
 import "package:csexplorer/customWidget/CustomAppBar.dart";
-import "package:csexplorer/data/model/university.dart";
-import "package:csexplorer/data/repositories/university_repo.dart";
-import "package:csexplorer/presentation/screens/Universities/university_details.dart";
-import "package:csexplorer/presentation/screens/Universities/university_form.dart";
-import "package:csexplorer/presentation/screens/Universities/edit_university.dart";
+import "package:csexplorer/data/model/scholarship.dart";
+import "package:csexplorer/data/repositories/scholarship_repo.dart";
+import "package:csexplorer/presentation/screens/Scholarships/edit_scholarship.dart";
+import "package:csexplorer/presentation/screens/Scholarships/scholarship_details.dart";
+import "package:csexplorer/presentation/screens/Scholarships/scholarship_form.dart";
 import "package:flutter/material.dart";
 
-class ManageUniversity extends StatefulWidget {
-  const ManageUniversity({super.key});
+class ManageScholarship extends StatefulWidget {
+  const ManageScholarship({super.key});
 
   @override
-  State<ManageUniversity> createState() => _UniversityMainState();
+  State<ManageScholarship> createState() => _ManageScholarshipState();
 }
 
-class _UniversityMainState extends State<ManageUniversity> {
-  final UniversityRepo universityRepo = UniversityRepo();
-  List<University> universities = [];
+class _ManageScholarshipState extends State<ManageScholarship> {
+  final ScholarshipRepo scholarshipRepo = ScholarshipRepo();
+  List<Scholarship> sholarships = [];
 
   @override
   void initState() {
     super.initState();
-    _loadUniversity();
+    _loadScholarship();
   }
 
-  Future<void> _loadUniversity() async {
-    List<University> fetchedUniversities = await universityRepo.fetchUniList();
+  Future<void> _loadScholarship() async {
+    List<Scholarship> fetchedScholarship = await scholarshipRepo.fetchScholarshipList();
     setState(() {
-      universities = fetchedUniversities;
+      sholarships = fetchedScholarship;
     });
   }
 
-  void _deleteUniversity(int index) async {
+  void _deleteScholarship(int index) async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Confirm Deletion'),
-          content: const Text('Are you sure you want to delete this university?'),
+          content: const Text('Are you sure you want to delete this scholarship?'),
           actions: [
             TextButton(
               onPressed: () {
@@ -54,9 +54,9 @@ class _UniversityMainState extends State<ManageUniversity> {
             ),
             TextButton(
               onPressed: () async {
-                bool success = await universityRepo.deleteUniversity(universities[index].id);
+                bool success = await scholarshipRepo.deleteScholarship(sholarships[index].id);
                 if (success) {
-                  _loadUniversity();
+                  _loadScholarship();
                 } else {
                   // ignore: use_build_context_synchronously
                   showDialog(
@@ -64,7 +64,7 @@ class _UniversityMainState extends State<ManageUniversity> {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: const Text('Error'),
-                        content: const Text('Cannot Delete the University'),
+                        content: const Text('Cannot Delete the Scholarship'),
                         actions: [
                           TextButton(
                             onPressed: () {
@@ -78,6 +78,7 @@ class _UniversityMainState extends State<ManageUniversity> {
                     },
                   );
                 }
+                // ignore: use_build_context_synchronously
                 Navigator.of(context).pop(); // Close the confirmation dialog
               },
                style: ElevatedButton.styleFrom(
@@ -94,67 +95,60 @@ class _UniversityMainState extends State<ManageUniversity> {
     );
   }
 
-  void editUniversity(BuildContext context, int index) {
+  void editScholarship(BuildContext context, int index) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => EditUniversityPage(university: universities[index]),
+        builder: (context) => EditScholarshipPage(scholarship: sholarships[index]),
       ),
     ).then((_) {
-      _loadUniversity();
+      _loadScholarship();
     });
   }
-   List<String> uniImage = [
-    'UTM.jpg',
-    'UM.jpg',
-    'USM.jpg',
-    'UM.jpg',
-  ];
+
 @override
 Widget build(BuildContext context) {
   return Scaffold(
     appBar: CustomAppBar(
         title: "Tertiary Institution",
-        description: "Public and Private University/College/Vocational",
+        description: "Public and Private Scholarship/College/Vocational",
         colour: Colors.indigo.shade700),
     backgroundColor: Colors.grey[100],
     body: ListView.separated(
-      itemCount: universities.length,
+      itemCount: sholarships.length,
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       separatorBuilder: (context, index) => const SizedBox(
         height: 10,
       ),
       itemBuilder: (context, index) {
-        University university = universities[index];
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => UniversityDetails(universityArguments: university),
-              ),
-            );
-          },
-          child: Container(
-            width: 240,
-            height: 120,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: SizedBox(
-                    width: 80,
-                    height: 80,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: _buildImageWidget(university.image),
-                    ),
-                  ),
-                ),
+        Scholarship scholarship = sholarships[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ScholarshipDetails(
+                                  scholarshipArguments: scholarship)));
+                    },
+                    child: Container(
+                      width: 240,
+                      height: 120,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15)),
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20),
+                            child: Container(
+                              width: 80,
+                              height: 80,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child:_buildImageWidget(scholarship.image)
+                              ),
+                            ),
+                          ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 15, vertical: 15),
@@ -175,12 +169,13 @@ Widget build(BuildContext context) {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          university.name,
+                                          scholarship.providerName,
                                           style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
+                                              fontWeight: FontWeight.bold, 
+                                              fontSize: 13.0),
                                         ),
                                         const SizedBox(
-                                          height: 5,
+                                          height: 1,
                                         ),
                                       ],
                                     ),
@@ -189,7 +184,7 @@ Widget build(BuildContext context) {
                                   IconButton(
                                       icon: const Icon(Icons.edit),
                                       onPressed: () {
-                                        editUniversity(context, index);
+                                        editScholarship(context, index);
                                       }),
                                   IconButton(
                                     icon: const Icon(
@@ -198,12 +193,11 @@ Widget build(BuildContext context) {
                                     color: const Color.fromARGB(
                                         255, 251, 117, 117),
                                     onPressed: () {
-                                      _deleteUniversity(index);
+                                      _deleteScholarship(index);
                                     },
                                   ),
                                 ],
                               ),
-                              Text(university.description),
                             ],
                           ),
                         ),
@@ -211,10 +205,10 @@ Widget build(BuildContext context) {
                     ),
                   ),
                 ),
-              ],
-            ),
-          ),
-        );
+                        ],
+                      ),
+                    ),
+                  );
       },
     ),
     floatingActionButton: Stack(
@@ -227,7 +221,7 @@ Widget build(BuildContext context) {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const UniversityForm()));
+                      builder: (context) => const ScholarshipForm()));
             },
             backgroundColor: Colors.indigo[700],
             elevation: 0,

@@ -1,28 +1,29 @@
 import "dart:io";
 
-import "package:csexplorer/data/model/university.dart";
-import "package:csexplorer/data/repositories/university_repo.dart";
+import "package:csexplorer/data/model/scholarship.dart";
+import "package:csexplorer/data/repositories/scholarship_repo.dart";
 import "package:flutter/material.dart";
 import "package:image_picker/image_picker.dart";
 
-class EditUniversityPage extends StatefulWidget {
-  final University university;
+class EditScholarshipPage extends StatefulWidget {
+  final Scholarship scholarship;
 
-  EditUniversityPage({required this.university});
+  EditScholarshipPage({required this.scholarship});
 
   @override
-  _EditUniversityPageState createState() => _EditUniversityPageState();
+  _EditScholarshipPageState createState() => _EditScholarshipPageState();
 }
 
-class _EditUniversityPageState extends State<EditUniversityPage> {
-  final TextEditingController editNameController = TextEditingController();
-  final TextEditingController editLocationController = TextEditingController();
-  final TextEditingController editDescriptionController =TextEditingController();
-  final TextEditingController editBackgroundController =TextEditingController();
-  final TextEditingController editCourseController = TextEditingController();
+class _EditScholarshipPageState extends State<EditScholarshipPage> {
+  final TextEditingController editProviderNameController = TextEditingController();
+  final TextEditingController editDescriptionController = TextEditingController();
+  final TextEditingController editApplicationRequirementController = TextEditingController();
+  final TextEditingController editlinkController = TextEditingController();
   final TextEditingController editImageController = TextEditingController();
-  final UniversityRepo universityRepo = UniversityRepo();
+  final ScholarshipRepo scholarshipRepo = ScholarshipRepo();
 
+  List<TextEditingController> _shcolarshipControllers = [];
+  
   XFile? _image;
     String imagePathAsString = "";
     Future<void> _getImage() async {
@@ -37,40 +38,34 @@ class _EditUniversityPageState extends State<EditUniversityPage> {
         });
       }
     }
-
   @override
   void initState() {
     super.initState();
-    editNameController.text = widget.university.name;
-    editLocationController.text = widget.university.location;
-    editDescriptionController.text = widget.university.description;
-    editBackgroundController.text = widget.university.background;
-    editCourseController.text = widget.university.courseNames.join('\n');
-    editImageController.text = widget.university.image;
+    editProviderNameController.text = widget.scholarship.providerName;
+    editDescriptionController.text = widget.scholarship.description;
+    editApplicationRequirementController.text = widget.scholarship.applicationRequirement;
+    editlinkController.text = widget.scholarship.link;  
+    editImageController.text = widget.scholarship.image;
   }
 
-  Future<void> _updateUniversity() async {
-    String editedName = editNameController.text;
-    String editedLocation = editLocationController.text;
+  Future<void> _updateScholarship() async {
+    String editedProviderName = editProviderNameController.text;
     String editedDescription = editDescriptionController.text;
-    String editedBackground = editBackgroundController.text;
+    String editedApplicationRequirement = editApplicationRequirementController.text;
+    String editedlink = editlinkController.text;
     String editedImage = editImageController.text;
 
-
-
-    List<String> editedCourseName = editCourseController.text.split('\n');
-    if (editedName.isNotEmpty) {
-      University editedUniversity = University(
-        name: editedName,
-        location: editedLocation,
+    if (editedProviderName.isNotEmpty) {
+      Scholarship editedScholarship = Scholarship(
+        providerName: editedProviderName,
         description: editedDescription,
-        background: editedBackground,
-        courseNames: editedCourseName,
-        image: editedImage,
+        applicationRequirement: editedApplicationRequirement,
+        link: editedlink,
+        image: editedImage,  
       );
 
-      await universityRepo.editUniversity(
-          widget.university.id, editedUniversity);
+      await scholarshipRepo.editScholarship(
+          widget.scholarship.id, editedScholarship);
     }
   }
 
@@ -78,7 +73,7 @@ class _EditUniversityPageState extends State<EditUniversityPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit University'),
+        title: const Text("Edit a scholarship"),
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -87,39 +82,52 @@ class _EditUniversityPageState extends State<EditUniversityPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Name", style: TextStyle(color: Colors.grey[600])),
+              Text(
+                "Provider Name",
+                style: TextStyle(color: Colors.grey[600]),
+              ),
               TextField(
-                controller: editNameController,
+                controller: editProviderNameController,
                 decoration:
                     const InputDecoration(border: UnderlineInputBorder()),
               ),
               const SizedBox(height: 20),
-              Text("Location", style: TextStyle(color: Colors.grey[600])),
-              TextField(
-                controller: editLocationController,
-                decoration:
-                    const InputDecoration(border: UnderlineInputBorder()),
+              Text(
+                "Description",
+                style: TextStyle(color: Colors.grey[600]),
               ),
-              const SizedBox(height: 20),
-              Text("Description", style: TextStyle(color: Colors.grey[600])),
-              TextField(
-                controller: editDescriptionController,
-                decoration: const InputDecoration(
-                    border: UnderlineInputBorder(),
-                    hintText: 'Short description about the university'),
-              ),
-              const SizedBox(height: 20),
-              Text("Introduce the university",
-                  style: TextStyle(color: Colors.grey[600])),
               TextFormField(
-                  controller: editBackgroundController,
+                  controller: editDescriptionController,
+                  maxLines: 4,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      hintText: 'Description of the scholarship')),
+              const SizedBox(height: 20),
+              Text("Application Requirements",
+                  style: TextStyle(color: Colors.grey[600])),
+              const SizedBox(
+                height: 5,
+              ),
+              TextFormField(
+                  controller: editApplicationRequirementController,
                   maxLines: 5,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10)),
-                      hintText: 'Background of the university')),
+                      hintText: 'Any specific academic or financial requirements')),
               const SizedBox(height: 20),
-              Text("Update image of the university",
+              Text(
+                "Link to official or reference website",
+                style: TextStyle(color: Colors.grey[600]),
+              ),
+              TextField(
+                controller: editlinkController,
+                decoration:
+                    const InputDecoration(border: UnderlineInputBorder()),
+              ),
+            const SizedBox(height: 20),
+            Text("Update image of the scholarship",
                 style: TextStyle(color: Colors.grey[600]
                 ),
              ),
@@ -173,28 +181,18 @@ class _EditUniversityPageState extends State<EditUniversityPage> {
                           ),
                         ),
                     ),
-              ),
-              const SizedBox(height: 20),
-              Text("Number of computer science courses offered",
-                  style: TextStyle(color: Colors.grey[600])),
-              TextFormField(
-                  controller: editCourseController,
-                  maxLines: 5,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      hintText: 'Course of the university')),
-              const SizedBox(height: 80),
+              ),              
+              const SizedBox(height: 50),
               Center(
                 child: SizedBox(
                   width: 250,
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () async {
-                      await _updateUniversity();
+                      await _updateScholarship();
                       Navigator.pop(context, true);
                     },
-                    child: Text('Save Changes'),
+                    child: const Text('Save Changes'),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Colors.indigo[700],
@@ -204,11 +202,12 @@ class _EditUniversityPageState extends State<EditUniversityPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 70),
+              const SizedBox(height: 50),
             ],
           ),
         ),
       ),
     );
+  
   }
 }

@@ -163,7 +163,10 @@ class ForumTopicState extends State<ForumTopic> {
                                       const Spacer(),
                                       if (isAuthor)
                                         IconButton(
-                                          icon: const Icon(Icons.delete),
+                                          icon: const Icon(Icons.delete, 
+                                          color:  Color.fromARGB(
+                                        255, 251, 117, 117),
+                                        ),
                                           onPressed: () async {
                                             await _forumRepository
                                                 .deleteForumTopicBySubject(
