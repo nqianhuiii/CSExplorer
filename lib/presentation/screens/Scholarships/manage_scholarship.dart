@@ -6,7 +6,6 @@ import "package:csexplorer/data/repositories/scholarship_repo.dart";
 import "package:csexplorer/presentation/screens/Scholarships/edit_scholarship.dart";
 import "package:csexplorer/presentation/screens/Scholarships/scholarship_details.dart";
 import "package:csexplorer/presentation/screens/Scholarships/scholarship_form.dart";
-import "package:csexplorer/presentation/screens/Universities/university_form.dart";
 import "package:flutter/material.dart";
 
 class ManageScholarship extends StatefulWidget {

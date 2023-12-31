@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:csexplorer/data/model/scholarship.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 class ScholarshipDetails extends StatefulWidget {
   final Scholarship scholarshipArguments;
   const ScholarshipDetails({Key? key, required this.scholarshipArguments})
@@ -10,6 +12,14 @@ class ScholarshipDetails extends StatefulWidget {
   State<ScholarshipDetails> createState() => _ScholarshipDetailsState();
 }
 class _ScholarshipDetailsState extends State<ScholarshipDetails> {
+ 
+  void _launchURL(String url) async {
+    final uri = Uri.parse(url);
+    if (!await launchUrl(uri)) {
+      throw Exception('Could not launch url');
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -55,7 +65,23 @@ class _ScholarshipDetailsState extends State<ScholarshipDetails> {
                             'Link to Official or Reference Website',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          Text(widget.scholarshipArguments.link),                          
+                          GestureDetector(
+                            onTap: () {
+                              _launchURL(widget.scholarshipArguments.link);
+                            },
+                            child: Row(
+                              children: [
+                                const Icon(Icons.link, color: Colors.black,),
+                                const SizedBox(width: 10,),
+                                Text(
+                                  widget.scholarshipArguments.link,
+                                  style: const TextStyle(
+                                    color: Colors.black, // Make the link appear in a different color
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),                          
                           const SizedBox(height: 70),
                         ]),
                   ),
@@ -111,3 +137,4 @@ Widget _buildImageWidget(String imagePath) {
       );
     }
   }
+

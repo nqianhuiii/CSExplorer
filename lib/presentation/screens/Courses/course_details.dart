@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:csexplorer/data/model/course.dart';
 import 'package:flutter/material.dart';
 
@@ -29,10 +31,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     height: 250,
-                    child: Image.asset(
-                      'assets/images/course/${courseImage[widget.courseArguments.imageIndex]}',
-                      fit: BoxFit.cover,
-                    ),
+                    child:_buildImageWidget(widget.courseArguments.image)
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -90,3 +89,33 @@ class _CourseDetailsState extends State<CourseDetails> {
     );
   }
 }
+
+Widget _buildImageWidget(String imagePath) {
+    // ignore: unnecessary_null_comparison
+    if (imagePath == null || imagePath.isEmpty) {
+      return Container();
+    }
+
+    if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
+      return Image.network(
+        imagePath,
+        height: 150,
+        width: 150,
+        fit: BoxFit.cover,
+      );
+    } else if (imagePath.startsWith('assets/')) {
+      return Image.asset(
+        imagePath,
+        height: 150,
+        width: 150,
+        fit: BoxFit.cover,
+      );
+    } else {
+      return Image.file(
+        File(imagePath),
+        height: 150,
+        width: 150,
+        fit: BoxFit.cover,
+      );
+    }
+  }

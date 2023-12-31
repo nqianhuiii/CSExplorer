@@ -91,7 +91,7 @@ class _ScholarshipFormState extends State<ScholarshipForm> {
                     const InputDecoration(border: UnderlineInputBorder()),
               ),
             const SizedBox(height: 20),
-            Text("Upload image of the university",
+            Text("Upload image of the scholarship provider",
                 style: TextStyle(color: Colors.grey[600]
                 ),
              ),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:csexplorer/customWidget/CustomAppBar.dart';
 import 'package:csexplorer/data/model/course.dart';
 import 'package:csexplorer/data/repositories/course_repo.dart';
@@ -14,12 +16,6 @@ class CourseMain extends StatefulWidget {
 
 class _CourseMainState extends State<CourseMain> {
   final CourseRepo _courseRepo = CourseRepo();
-  List<String> courseImage = [
-    'Graphic.jpg',
-    'Cyber.jpg',
-    'DE.png',
-    'SE.jpeg',
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -81,10 +77,7 @@ class _CourseMainState extends State<CourseMain> {
                             height: 100,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
-                              child: Image.asset(
-                                'assets/images/course/${courseImage[course.imageIndex]}',
-                                fit: BoxFit.fill,
-                              ),
+                              child: _buildImageWidget(course.image)
                             ),
                           ),
                         ),
@@ -109,3 +102,33 @@ class _CourseMainState extends State<CourseMain> {
     );
   }
 }
+
+Widget _buildImageWidget(String imagePath) {
+    // ignore: unnecessary_null_comparison
+    if (imagePath == null || imagePath.isEmpty) {
+      return Container();
+    }
+
+    if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
+      return Image.network(
+        imagePath,
+        height: 150,
+        width: 150,
+        fit: BoxFit.cover,
+      );
+    } else if (imagePath.startsWith('assets/')) {
+      return Image.asset(
+        imagePath,
+        height: 150,
+        width: 150,
+        fit: BoxFit.cover,
+      );
+    } else {
+      return Image.file(
+        File(imagePath),
+        height: 150,
+        width: 150,
+        fit: BoxFit.cover,
+      );
+    }
+  }

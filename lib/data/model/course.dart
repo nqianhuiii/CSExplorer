@@ -3,13 +3,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Course{
   late String id;
   late String name, description, academicRequirements, jobOpportunity;
-  late int imageIndex;
+  late String image;
+
 
   Course({
     required this.name,
     required this.description,
     required this.academicRequirements,
     required this.jobOpportunity,
+    required this.image,
   }); 
 
   Map<String, dynamic> toJson() {
@@ -18,6 +20,7 @@ class Course{
       'description': description,
       'academicRequirements': academicRequirements,
       'jobOpportunity': jobOpportunity,
+      'image': image,
     };
   }
 
@@ -26,8 +29,7 @@ class Course{
         description = json['description'],
         academicRequirements = json['academicRequirements'],
         jobOpportunity= json['jobOpportunity'],
-        imageIndex = json['imageIndex'] ?? 0; 
-        
+        image = json['image'];        
 
   Course.fromSnapshot(DocumentSnapshot snapshot)
       : id = snapshot.id,
@@ -35,5 +37,5 @@ class Course{
         description = snapshot['description'],
         academicRequirements = snapshot['academicRequirements'],
         jobOpportunity= snapshot['jobOpportunity'],
-        imageIndex = snapshot['imageIndex'] ?? 0;
+        image= snapshot['image'];
 }
