@@ -1,6 +1,8 @@
 //import 'package:csexplorer/bottom_navbar.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:csexplorer/firebase_config.dart';
 import 'package:csexplorer/presentation/screens/Authentication/login.dart';
+import 'package:csexplorer/splash.dart';
 //import 'package:csexplorer/presentation/screens/Authentication/signup.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +23,21 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           scaffoldBackgroundColor: Colors.grey[100],
           primaryColor: Colors.indigo[700]),
-      home: const LoginPage(title: "Sign in"),
+      home: AnimatedSplashScreen(
+        backgroundColor: Colors.blue.shade50,
+        splash: Center(
+          child: SizedBox(
+            height: 800,
+            width: 150,
+            child: Image.asset(
+              'assets/images/CSExplorer.jpeg', 
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        nextScreen: const LoginPage(title: 'Sign In'),
+        splashTransition: SplashTransition.fadeTransition,
+      ),   
     );
   }
 }
