@@ -4,11 +4,10 @@ import 'package:flutter/foundation.dart';
 
 import '../model/reply.dart';
 
-class ForumRepository
-{
+class ForumRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> addForumTopic(Forum forum) async {
+   Future<void> addForumTopic(Forum forum) async {
     try {
       await _firestore.collection('Forum').add(forum.toJson());
     } catch (e) {
@@ -18,8 +17,8 @@ class ForumRepository
     }
   }
 
-  Future<void> deleteForumTopic(Forum forum) async
-  {
+
+  Future<void> deleteForumTopic(Forum forum) async {
     try {
       await _firestore.collection('Forum').doc(forum.id).delete();
     } catch (e) {
@@ -52,12 +51,8 @@ class ForumRepository
     }
   }
 
-
-
-  Future<List<Forum>> fetchForumList() async
-  {
-    try
-    {
+  Future<List<Forum>> fetchForumList() async {
+    try {
       QuerySnapshot querySnapshot = await _firestore.collection('Forum').get();
       List<Forum> forumList = querySnapshot.docs.map((doc) {
         return Forum.fromJson(doc.data() as Map<String, dynamic>);
@@ -67,12 +62,28 @@ class ForumRepository
       if (kDebugMode) {
         print('Error fetching forum list: $e');
       }
+      return [];
+    }
+  }
+
+  static Future<List<String>> fetchForumSubjects() async {
+    try {
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      QuerySnapshot querySnapshot = await firestore.collection('Forum').get();
+      List<String> forumSubjects = querySnapshot.docs.map((doc) {
+        return doc['subject'] as String;
+      }).toList();
+      return forumSubjects;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error fetching forum subjects: $e');
+      }
       rethrow;
     }
   }
 
-  static Future<void> deleteReply(String subject, String replyId) async
-  {
+
+  static Future<void> deleteReply(String subject, String replyId) async {
     try {
       final FirebaseFirestore firestore = FirebaseFirestore.instance;
       QuerySnapshot subjectQuery = await firestore
@@ -87,9 +98,7 @@ class ForumRepository
             subjectRef.collection('Replies');
 
         await repliesCollection.doc(replyId).delete();
-      }
-      else
-      {
+      } else {
         // ignore: avoid_print
         print('Subject not found: $subject');
       }
@@ -116,15 +125,11 @@ class ForumRepository
             subjectRef.collection('Replies');
 
         await repliesCollection.doc(replyId).update({'reply': newReply});
-      }
-      else
-      {
+      } else {
         // ignore: avoid_print
         print('Subject not found: $subject');
       }
-    }
-    catch (e)
-    {
+    } catch (e) {
       // ignore: avoid_print
       print('Error editing reply: $e');
       rethrow;
@@ -133,11 +138,8 @@ class ForumRepository
 
   Future<List<String>> getAllReplyUserIds(String subject) async {
     try {
-
       QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await FirebaseFirestore.instance
-              .collection('Replies')
-              .get();
+          await FirebaseFirestore.instance.collection('Replies').get();
 
       List<String> userIds = querySnapshot.docs
           .map((QueryDocumentSnapshot<Map<String, dynamic>> doc) =>
@@ -146,13 +148,13 @@ class ForumRepository
 
       return userIds;
     } catch (error) {
+      // ignore: avoid_print
       print('Error retrieving reply user IDs: $error');
       return [];
     }
   }
 
-
-static Future<String> getIdForReply(String subject, String name) async {
+  static Future<String> getIdForReply(String subject, String name) async {
     try {
       final FirebaseFirestore firestore = FirebaseFirestore.instance;
       QuerySnapshot subjectQuery = await firestore
@@ -188,10 +190,8 @@ static Future<String> getIdForReply(String subject, String name) async {
     }
   }
 
-
-
-
- static Future<String> addReplyToSubject(String subject, String reply,String name,String id) async {
+  static Future<String> addReplyToSubject(String subject, String reply,
+      String name, String id, List<String> likeId) async {
     try {
       final FirebaseFirestore firestore = FirebaseFirestore.instance;
       QuerySnapshot subjectQuery = await firestore
@@ -205,8 +205,12 @@ static Future<String> getIdForReply(String subject, String name) async {
         CollectionReference repliesCollection =
             subjectRef.collection('Replies');
 
-        DocumentReference replyDocRef =
-            await repliesCollection.add({'reply': reply, 'likes': 0,'name':name,'id':id});
+        DocumentReference replyDocRef = await repliesCollection.add({
+          'reply': reply,
+          'name': name,
+          'id': id,
+          'likeId': likeId
+        });
 
         return replyDocRef.id;
       } else {
@@ -221,7 +225,7 @@ static Future<String> getIdForReply(String subject, String name) async {
     }
   }
 
- static Future<List<String>> retrieveNamesForSubject(String subject) async {
+  static Future<List<String>> retrieveNamesForSubject(String subject) async {
     try {
       final FirebaseFirestore firestore = FirebaseFirestore.instance;
       QuerySnapshot subjectQuery = await firestore
@@ -251,15 +255,12 @@ static Future<String> getIdForReply(String subject, String name) async {
         print('Subject not found: $subject');
         return [];
       }
-    }
-    catch (e)
-    {
+    } catch (e) {
       // ignore: avoid_print
       print('Error retrieving names for subject: $e');
       rethrow;
     }
   }
-
 
   static Future<List<String>> retrieveIdsForSubject(String subject) async {
     try {
@@ -287,20 +288,16 @@ static Future<String> getIdForReply(String subject, String name) async {
 
         return idsList;
       } else {
-        // Subject not found
+        // ignore: avoid_print
         print('Subject not found: $subject');
         return [];
       }
     } catch (e) {
-      // Error handling
+      // ignore: avoid_print
       print('Error retrieving IDs for subject: $e');
       rethrow;
     }
   }
-
-
-
-
 
   static Future<List<String>> retrieveRepliesForSubject(String subject) async {
     try {
@@ -316,7 +313,7 @@ static Future<String> getIdForReply(String subject, String name) async {
         CollectionReference repliesCollection =
             subjectRef.collection('Replies');
 
-       QuerySnapshot repliesQuery = await repliesCollection.get();
+        QuerySnapshot repliesQuery = await repliesCollection.get();
         List<String> repliesList = repliesQuery.docs
             .map((doc) => doc['reply'] as String?)
             .where((reply) => reply != null)
@@ -336,7 +333,8 @@ static Future<String> getIdForReply(String subject, String name) async {
     }
   }
 
-   Future<void> incrementLikeForum(String forum) async {
+  static Future<void> incrementLikeForum(String forum) async
+  {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     try {
       QuerySnapshot querySnapshot = await firestore
@@ -354,27 +352,168 @@ static Future<String> getIdForReply(String subject, String name) async {
     }
   }
 
-  Future<int> getLikesForum(String comment) async {
+ static Future<void> decrementLikeForum(String forum) async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     try {
       QuerySnapshot querySnapshot = await firestore
           .collection('Forum')
-          .where('subject', isEqualTo: comment)
+          .where('subject', isEqualTo: forum)
           .get();
 
-      if (querySnapshot.docs.isNotEmpty) {
-        QueryDocumentSnapshot document = querySnapshot.docs.first;
-        int likes = document['likes'] ?? 0;
-        return likes;
-      } else {
-        return 0;
+      for (QueryDocumentSnapshot document in querySnapshot.docs) {
+        await firestore.collection('Forum').doc(document.id).update({
+          'likes': FieldValue.increment(-1),
+        });
       }
     } catch (e) {
       rethrow;
     }
   }
 
-   static Future<void> incrementLikesForReply(
+
+   static Future<void> addLikesIdForForum(String forum, String likeId) async {
+    try {
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      QuerySnapshot forumQuery = await firestore
+          .collection('Forum')
+          .where('subject', isEqualTo: forum)
+          .limit(1)
+          .get();
+
+      if (forumQuery.docs.isNotEmpty) {
+        DocumentReference forumRef = forumQuery.docs.first.reference;
+
+        // Get the current likeIds array
+        DocumentSnapshot forumSnapshot = await forumRef.get();
+        List<String> currentLikesId =
+            List<String>.from(forumSnapshot['likeId'] ?? []);
+
+        if (!currentLikesId.contains(likeId)) {
+          currentLikesId.add(likeId);
+
+          await forumRef.update({
+            'likeId': currentLikesId,
+          });
+        } else {
+          // ignore: avoid_print
+          print('Duplicate likeId: $likeId for forum: $forum');
+        }
+      } else {
+        // ignore: avoid_print
+        print('Subject not found: $forum');
+      }
+    } catch (e) {
+      // Error handling
+      // ignore: avoid_print
+      print('Error adding likeId for forum: $e');
+      rethrow;
+    }
+  }
+
+
+  static Future<void> removeLikeIdForForum(String forum, String likeId) async {
+    try {
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      QuerySnapshot forumQuery = await firestore
+          .collection('Forum')
+          .where('subject', isEqualTo: forum)
+          .limit(1)
+          .get();
+
+      if (forumQuery.docs.isNotEmpty) {
+        DocumentReference forumRef = forumQuery.docs.first.reference;
+
+       
+        DocumentSnapshot forumSnapshot = await forumRef.get();
+        List<String> currentLikesId =
+            List<String>.from(forumSnapshot['likeId'] ?? []);
+
+       
+        currentLikesId.remove(likeId);
+
+        await forumRef.update({
+          'likeId': currentLikesId,
+        });
+      } else {
+        
+        // ignore: avoid_print
+        print('Subject not found: $forum');
+      }
+    } catch (e) {
+     
+      // ignore: avoid_print
+      print('Error removing likeId for forum: $e');
+      rethrow;
+    }
+  }
+
+
+  static Future<List<String>> retrieveLikesIdForForum(String forum) async {
+    try {
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      QuerySnapshot forumQuery = await firestore
+          .collection('Forum')
+          .where('subject', isEqualTo: forum)
+          .limit(1)
+          .get();
+
+      if (forumQuery.docs.isNotEmpty) {
+        DocumentReference forumRef = forumQuery.docs.first.reference;
+
+        // Get the current likeIds array
+        DocumentSnapshot forumSnapshot = await forumRef.get();
+        List<String> currentLikesId =
+            List<String>.from(forumSnapshot['likeId'] ?? []);
+
+        return currentLikesId;
+      } else {
+  
+        // ignore: avoid_print
+        print('Subject not found: $forum');
+        return []; 
+      }
+    } catch (e) {
+
+      // ignore: avoid_print
+      print('Error retrieving likeIds for forum: $e');
+      rethrow;
+    }
+  }
+
+   Future<int> retrieveLikesCountForForum(String forum) async {
+    try {
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      QuerySnapshot forumQuery = await firestore
+          .collection('Forum')
+          .where('subject', isEqualTo: forum)
+          .limit(1)
+          .get();
+
+      if (forumQuery.docs.isNotEmpty) {
+        DocumentReference forumRef = forumQuery.docs.first.reference;
+
+        // Get the current likeIds array
+        DocumentSnapshot forumSnapshot = await forumRef.get();
+        List<String> currentLikesId =
+            List<String>.from(forumSnapshot['likeId'] ?? []);
+
+
+        return currentLikesId.length;
+      } else {
+
+        // ignore: avoid_print
+        print('Subject not found: $forum');
+        return 0;
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error retrieving like count for forum: $e');
+      rethrow;
+    }
+  }
+
+
+  static Future<void> incrementLikesForReply(
       String subject, String replyId) async {
     try {
       final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -402,6 +541,194 @@ static Future<String> getIdForReply(String subject, String name) async {
       rethrow;
     }
   }
+
+  static Future<void> decrementLikesForReply(
+      String subject, String replyId) async {
+    try {
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      QuerySnapshot subjectQuery = await firestore
+          .collection('Forum')
+          .where('subject', isEqualTo: subject)
+          .limit(1)
+          .get();
+
+      if (subjectQuery.docs.isNotEmpty) {
+        DocumentReference subjectRef = subjectQuery.docs.first.reference;
+        CollectionReference repliesCollection =
+            subjectRef.collection('Replies');
+
+        DocumentReference replyRef = repliesCollection.doc(replyId);
+
+        await replyRef.update({'likes': FieldValue.increment(-1)});
+      } else {
+        // ignore: avoid_print
+        print('Subject not found: $subject');
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error incrementing likes for reply: $e');
+      rethrow;
+    }
+  }
+
+  static Future<void> addLikesIdForReply(
+      String subject, String replyId, String likeId) async {
+    try {
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      QuerySnapshot subjectQuery = await firestore
+          .collection('Forum')
+          .where('subject', isEqualTo: subject)
+          .limit(1)
+          .get();
+
+      if (subjectQuery.docs.isNotEmpty) {
+        DocumentReference subjectRef = subjectQuery.docs.first.reference;
+        CollectionReference repliesCollection =
+            subjectRef.collection('Replies');
+
+        DocumentReference replyRef = repliesCollection.doc(replyId);
+
+        DocumentSnapshot replySnapshot = await replyRef.get();
+        List<String> currentLikesId =
+            List<String>.from(replySnapshot['likeId'] ?? []);
+
+        // Check if likeId already exists
+        if (!currentLikesId.contains(likeId)) {
+          currentLikesId.add(likeId);
+
+          await replyRef.update({
+            'likeId': currentLikesId,
+          });
+        } else {
+          // ignore: avoid_print
+          print('Duplicate likeId: $likeId for reply: $replyId');
+        }
+      } else {
+        // ignore: avoid_print
+        print('Subject not found: $subject');
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error adding likeId for reply: $e');
+      rethrow;
+    }
+  }
+
+
+  static Future<void> removeLikesIdForReply
+  (
+      String subject, String replyId, String likeId) async {
+    try
+    {
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      QuerySnapshot subjectQuery = await firestore
+          .collection('Forum')
+          .where('subject', isEqualTo: subject)
+          .limit(1)
+          .get();
+
+      if (subjectQuery.docs.isNotEmpty)
+      {
+        DocumentReference subjectRef = subjectQuery.docs.first.reference;
+        CollectionReference repliesCollection =
+            subjectRef.collection('Replies');
+
+        DocumentReference replyRef = repliesCollection.doc(replyId);
+
+        DocumentSnapshot replySnapshot = await replyRef.get();
+        List<String> currentLikesId =
+            List<String>.from(replySnapshot['likeId'] ?? []);
+
+        currentLikesId.remove(likeId);
+
+        await replyRef.update({
+          'likeId': currentLikesId,
+        });
+      }
+      else 
+      {
+        // ignore: avoid_print
+        print('Subject not found: $subject');
+      }
+    }
+    catch (e)
+    {
+      // ignore: avoid_print
+      print('Error removing likeId for reply: $e');
+      rethrow;
+    }
+  }
+
+  
+  static Future<List<String>> retrieveAllLikesIdForReply
+  (
+      String subject, String replyId) async {
+    try {
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      QuerySnapshot subjectQuery = await firestore
+          .collection('Forum')
+          .where('subject', isEqualTo: subject)
+          .limit(1)
+          .get();
+
+      if (subjectQuery.docs.isNotEmpty)
+      {
+        DocumentReference subjectRef = subjectQuery.docs.first.reference;
+        CollectionReference repliesCollection =
+            subjectRef.collection('Replies');
+
+        DocumentReference replyRef = repliesCollection.doc(replyId);
+
+        DocumentSnapshot replySnapshot = await replyRef.get();
+        List<String> currentLikesId =
+            List<String>.from(replySnapshot['likeId'] ?? []);
+
+        return currentLikesId;
+      }
+      else
+      {
+        return [];
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error retrieving likeIds for reply: $e');
+      rethrow;
+    }
+  }
+
+Future<int> retrieveLikesCountForReply(
+      String subject, String replyId) async {
+    try {
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      QuerySnapshot subjectQuery = await firestore
+          .collection('Forum')
+          .where('subject', isEqualTo: subject)
+          .limit(1)
+          .get();
+
+      if (subjectQuery.docs.isNotEmpty) {
+        DocumentReference subjectRef = subjectQuery.docs.first.reference;
+        CollectionReference repliesCollection =
+            subjectRef.collection('Replies');
+
+        DocumentReference replyRef = repliesCollection.doc(replyId);
+
+        DocumentSnapshot replySnapshot = await replyRef.get();
+        List<String> currentLikesId =
+            List<String>.from(replySnapshot['likeId'] ?? []);
+
+        
+        return currentLikesId.length;
+      } else {
+        return 0;
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error retrieving like count for reply: $e');
+      rethrow;
+    }
+  }
+
 
   static Future<List<String>> getAllReplyIdsForSubject(String subject) async {
     try {
@@ -440,8 +767,7 @@ static Future<String> getIdForReply(String subject, String name) async {
     }
   }
 
- Future<int> retrieveLikesForReply(
-      String subject, String replyId) async {
+  Future<int> retrieveLikesForReply(String subject, String replyId) async {
     try {
       final FirebaseFirestore firestore = FirebaseFirestore.instance;
       QuerySnapshot subjectQuery = await firestore
@@ -468,24 +794,19 @@ static Future<String> getIdForReply(String subject, String name) async {
             return data['likes'] as int;
           }
         } else {
-     
           // ignore: avoid_print
           print('Reply not found: $replyId');
         }
-      }
-      else {
+      } else {
         // ignore: avoid_print
         print('Subject not found: $subject');
       }
       return 0;
-    }
-    catch (e) {
+    } catch (e) {
       // ignore: avoid_print
       print('Error retrieving likes for reply: $e');
       return 0;
     }
   }
-
-
-
 }
+
