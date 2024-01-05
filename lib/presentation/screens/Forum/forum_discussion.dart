@@ -278,12 +278,7 @@ class _ForumDiscussionState extends State<ForumDiscussion> {
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const CircleAvatar(
-                                  radius: 15,
-                                  backgroundImage: AssetImage(
-                                    'assets/images/defaultProfilePic.jpg',
-                                  ),
-                                ),
+                               
                                 const SizedBox(width: 10),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -367,12 +362,7 @@ class _ForumDiscussionState extends State<ForumDiscussion> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const CircleAvatar(
-                                        radius: 15,
-                                        backgroundImage: AssetImage(
-                                          'assets/images/defaultProfilePic.jpg',
-                                        ),
-                                      ),
+                                      
                                       const SizedBox(width: 10),
                                       Column(
                                         crossAxisAlignment:
@@ -421,10 +411,10 @@ class _ForumDiscussionState extends State<ForumDiscussion> {
                                         ),
                                     ],
                                   ),
-                                  const SizedBox(height: 2),
+                                  const SizedBox(height: 5),
                                   Row(
                                     children: [
-                                      const SizedBox(width: 35),
+                                  
                                       InkWell(
                                         onTap: () async {
                                           if (mounted) {
