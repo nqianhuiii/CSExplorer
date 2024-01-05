@@ -1,5 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
@@ -29,6 +28,7 @@ class _ForumDiscussionState extends State<ForumDiscussion> {
   List<String> updatedList = [];
   List<int> likesCounts = [];
   List<String> replyList = [];
+  List<String> likeId= [];
   int updatedLikes = 0;
   int likesCount = 0;
   String replyID = "";
@@ -48,6 +48,12 @@ class _ForumDiscussionState extends State<ForumDiscussion> {
     retrieveName();
     retrieveList();
     retrieveId();
+  }
+
+  @override
+  void dispose() {
+    _startRefreshTimer();
+    super.dispose();
   }
 
   Future<void> handleLikesUpdate(String replyId, int index) async {
@@ -105,24 +111,25 @@ class _ForumDiscussionState extends State<ForumDiscussion> {
       Duration(milliseconds: refreshIntervalInMilliseconds),
       (timer) {
         try {
-          // Retrieve the data in parallel using Future.wait
           Future.wait([
             retrieveList(),
             retrieveName(),
             retrieveId(),
           ]).then((_) {
-            // Fetch additional data and update UI
+
             fetchData();
             setState(() {
               _replyList = Future.value(updatedList);
             });
             fetchData();
           }).catchError((error) {
-            // Handle errors appropriately
+
+            // ignore: avoid_print
             print('Error fetching data: $error');
           });
-        } catch (error) {
-          // Handle errors appropriately
+        }
+        catch (error) {
+          // ignore: avoid_print
           print('Error: $error');
         }
       },
@@ -195,7 +202,7 @@ class _ForumDiscussionState extends State<ForumDiscussion> {
                   String subject = widget.forum.subject;
 
                   String replyId = await ForumRepository.addReplyToSubject(
-                      subject, replyText, name, userId);
+                      subject, replyText, name, userId,likeId);
 
                   replyList.add(replyId);
 
@@ -372,7 +379,7 @@ class _ForumDiscussionState extends State<ForumDiscussion> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(name),
-                                          //Text("name,$author"),
+                                          
                                           const SizedBox(height: 5),
                                           SizedBox(
                                             width: 200,
@@ -421,13 +428,37 @@ class _ForumDiscussionState extends State<ForumDiscussion> {
                                       InkWell(
                                         onTap: () async {
                                           if (mounted) {
-                                            await ForumRepository
-                                                .incrementLikesForReply(
-                                                    widget.forum.subject,
-                                                    replyId);
+
+                                            List<String> currentLikesId =
+                                                await ForumRepository
+                                                    .retrieveAllLikesIdForReply(
+                                                        widget.forum.subject,
+                                                        replyId);
+
+                                            if (currentLikesId
+                                                .contains(userId))
+                                                {
+                                             
+                                              await ForumRepository
+                                                  .removeLikesIdForReply(
+                                                      widget.forum.subject,
+                                                      replyId,
+                                                      userId);
+                                            }
+                                             else
+                                             {
+                                             
+                                              await ForumRepository
+                                                  .addLikesIdForReply(
+                                                      widget.forum.subject,
+                                                      replyId,
+                                                      userId);
+                                            }
+
                                             handleLikesUpdate(replyId, index);
                                           }
                                         },
+
                                         child: Row(
                                           children: [
                                             const Icon(
@@ -435,7 +466,7 @@ class _ForumDiscussionState extends State<ForumDiscussion> {
                                             const SizedBox(width: 3),
                                             FutureBuilder<int>(
                                               future: _forumRepository
-                                                  .retrieveLikesForReply(
+                                                  .retrieveLikesCountForReply(
                                                       widget.forum.subject,
                                                       replyId),
                                               builder:
