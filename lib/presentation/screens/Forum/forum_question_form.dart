@@ -17,13 +17,16 @@ class _ForumTopicFormState extends State<ForumTopicForm> {
   final _subjectController = TextEditingController();
   final _messageController = TextEditingController();
   final ForumRepository _forumRepository = ForumRepository();
-  int likes = 0;
+  List<String> likeId = [];
   String userId = AuthService.getCurrentUserId();
   String name = "";
   XFile? _image;
   String imagePathAsString = "";
+  List<String> existingSubjects = [];
 
-  Future<void> _getImage() async {
+
+  Future<void> _getImage() async
+  {
     // ignore: no_leading_underscores_for_local_identifiers
     final ImagePicker _picker = ImagePicker();
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
@@ -36,10 +39,18 @@ class _ForumTopicFormState extends State<ForumTopicForm> {
     }
   }
 
+  Future<void> retrieveId() async {
+    existingSubjects = await ForumRepository.fetchForumSubjects();
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     initializeName();
+    retrieveId();
   }
 
   Future<void> initializeName() async {
@@ -70,21 +81,39 @@ class _ForumTopicFormState extends State<ForumTopicForm> {
                 height: 5,
               ),
               TextFormField(
-                  controller: _subjectController,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)))),
+                controller: _subjectController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a subject';
+                  }
+                  return null;
+                },
+              ),
               const SizedBox(height: 15),
               const Text("Message"),
               const SizedBox(
                 height: 5,
               ),
               TextFormField(
-                  controller: _messageController,
-                  maxLines: 5,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)))),
+                controller: _messageController,
+                maxLines: 5,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a message';
+                  }
+                  return null;
+                },
+              ),
               const SizedBox(height: 15),
               const Text("Upload Image"),
               const SizedBox(
@@ -106,25 +135,49 @@ class _ForumTopicFormState extends State<ForumTopicForm> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () async {
-                      Forum forum = Forum(
-                          _subjectController.text,
-                          _messageController.text,
-                          likes,
-                          userId,
-                          name,
-                          imagePathAsString);
-                      _forumRepository.addForumTopic(forum);
-                      Navigator.pop(context);
+                      if (_subjectController.text.isEmpty ||
+                          _messageController.text.isEmpty)
+                      {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Subject or Message cannot be empty.'),
+                          ),
+                        );
+                      } else {
+                        String enteredSubject = _subjectController.text;
+                        if (existingSubjects.contains(enteredSubject)) {
+                          // Subject already exists, show error message
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                  'Subject already exists. Please choose a different subject.'),
+                            ),
+                          );
+                        } else {
+                         
+                          Forum forum = Forum(
+                            enteredSubject,
+                            _messageController.text,
+                            userId,
+                            name,
+                            imagePathAsString,likeId
+                          );
+                          _forumRepository.addForumTopic(forum);
+                          Navigator.pop(context);
+                        }
+                      }
                     },
                     style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.indigo.shade700,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12))),
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.indigo.shade700,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
                     child: const Text('Submit'),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
