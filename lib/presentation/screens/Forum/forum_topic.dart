@@ -131,13 +131,6 @@ class ForumTopicState extends State<ForumTopic> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const CircleAvatar(
-                                        radius: 15,
-                                        backgroundImage: AssetImage(
-                                          'assets/images/defaultProfilePic.jpg',
-                                        ),
-                                      ),
-                                      const SizedBox(width: 10),
                                       Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -184,7 +177,7 @@ class ForumTopicState extends State<ForumTopic> {
                                   const SizedBox(height: 10),
                                   Row(
                                     children: [
-                                      const SizedBox(width: 35),
+                                      
                                       InkWell(
                                        onTap: () async {
                                           if (mounted) {
