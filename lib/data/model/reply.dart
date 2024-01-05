@@ -1,28 +1,26 @@
 class Reply {
   String reply;
-  int likes;
   String name;
   String id;
+  late List<String> likeId = [];
 
-  Reply(this.reply, this.likes, this.name,this.id);
+  Reply(this.reply, this.name, this.id, this.likeId);
 
-  Reply.copy(Reply item) : this(item.reply, item.likes, item.name,item.id);
+  Reply.copy(Reply item)
+      : this(item.reply, item.name, item.id, item.likeId);
 
   Map<String, dynamic> toJson() {
     return {
       'reply': reply,
-      'likes': likes,
       'name': name,
-      'id':id,
+      'id': id,
+      'likeId': likeId
     };
   }
 
   Reply.fromJson(Map<String, dynamic> json)
       : reply = json['reply'] ?? '',
-        likes = json['likes'] ?? 0,
         name = json['name'] ?? '',
-        id = json['id'] ?? '';
-  
-
-
+        id = json['id'] ?? '',
+        likeId = json['likeId'] ?? '';
 }
