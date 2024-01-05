@@ -20,13 +20,17 @@ class ForumTopicState extends State<ForumTopic> {
   late Future<List<Forum.Forum>> _forumList = _forumRepository.fetchForumList();
   List<String> updatedlist = [];
   List<String> replies = [];
+  List<String> likeIds = [];
   String subject = "";
+  String forum = "";
   final AuthService authService = AuthService();
+  String userId = AuthService.getCurrentUserId();
 
   @override
   void initState() {
     super.initState();
     _startRefreshTimer();
+    //retrieveId(forum);
   }
 
   void _startRefreshTimer() {
@@ -58,6 +62,7 @@ class ForumTopicState extends State<ForumTopic> {
       return [];
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -163,10 +168,11 @@ class ForumTopicState extends State<ForumTopic> {
                                       const Spacer(),
                                       if (isAuthor)
                                         IconButton(
-                                          icon: const Icon(Icons.delete, 
-                                          color:  Color.fromARGB(
-                                        255, 251, 117, 117),
-                                        ),
+                                          icon: const Icon(
+                                            Icons.delete,
+                                            color: Color.fromARGB(
+                                                255, 251, 117, 117),
+                                          ),
                                           onPressed: () async {
                                             await _forumRepository
                                                 .deleteForumTopicBySubject(
@@ -180,11 +186,27 @@ class ForumTopicState extends State<ForumTopic> {
                                     children: [
                                       const SizedBox(width: 35),
                                       InkWell(
-                                        onTap: () async {
+                                       onTap: () async {
                                           if (mounted) {
-                                            await _forumRepository
-                                                .incrementLikeForum(
-                                                    forums.subject);
+
+                                            likeIds =
+                                                await ForumRepository
+                                                    .retrieveLikesIdForForum(
+                                                        forums.subject);
+                                            if (likeIds
+                                                .contains(userId)) {
+                                            
+                                              await ForumRepository
+                                                  .removeLikeIdForForum(
+                                                     forums.subject,
+                                                      userId);
+                                            } else {
+                                             
+                                              await ForumRepository
+                                                  .addLikesIdForForum(
+                                                      forums.subject,
+                                                      userId);
+                                            }
                                           }
                                         },
                                         child: Row(
@@ -194,7 +216,7 @@ class ForumTopicState extends State<ForumTopic> {
                                             const SizedBox(width: 3),
                                             FutureBuilder<int>(
                                               future: _forumRepository
-                                                  .getLikesForum(
+                                                  .retrieveLikesCountForForum(
                                                       forums.subject),
                                               builder:
                                                   (context, likesSnapshot) {
